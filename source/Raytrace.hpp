@@ -13,10 +13,7 @@ inline auto intersects(const Spheres& spheres, const Ray& ray)
 
 inline Image raytrace(CameraSensor sensor, const Spheres& spheres)
 {
-    Image image{sensor.size.width, sensor.size.height};
-    auto v = view(image);
-    sensor.forEachRay([&](auto x, auto y, auto ray) { v(x, y) = intersects(spheres, ray) ? 255 : 0; });
-    return image;
+    return sensor.collectImage([&](auto ray) { return intersects(spheres, ray) ? 255 : 0; });
 }
 
 }

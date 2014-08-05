@@ -1,5 +1,6 @@
 #pragma once
 #include "Ray.hpp"
+#include "Image.hpp"
 
 namespace lc
 {
@@ -16,18 +17,26 @@ struct CameraSensor
     /**
      * @param f void(unsigned x, unsigned y, Ray ray)
      */
-    template <typename F3>
-    void forEachRay(F3 f)
+    template <typename Intensity>
+    auto collectImage(Intensity intensity)
     {
-        for (unsigned y = 0; y < size.height; ++y)
-            for (unsigned x = 0; x < size.width; ++x)
-                f(x, y, rayFrom(x, y));
+        Image image{size.width, size.height};
+        auto v = view(image);
+        forEachPixel([&](auto x, auto y) { v(x, y) = intensity(rayFrom(x, y)); });
+        return image;
     }
 
 private:
     Ray rayFrom(unsigned x, unsigned y) const
     {
         return {{Float(x), Float(y), 0}, {0, 0, 1}};
+    }
+    template <typename F2>
+    void forEachPixel(F2 f)
+    {
+        for (unsigned y = 0; y < size.height; ++y)
+            for (unsigned x = 0; x < size.width; ++x)
+                f(x, y);
     }
 };
 
