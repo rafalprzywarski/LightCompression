@@ -1,12 +1,12 @@
 project(cellcpp)
 cmake_minimum_required(VERSION 2.8)
 
-add_definitions("-std=c++11 -Wall")
+add_definitions("-std=c++1y -Wall")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
 find_package(Boost COMPONENTS system filesystem REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIRS} "libraries/cml-1_0_2")
 
 set(GoogleMock_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/libraries/GoogleMock/include")
 
