@@ -14,9 +14,6 @@ struct CameraSensor
 {
     SensorSize size;
 
-    /**
-     * @param f void(unsigned x, unsigned y, Ray ray)
-     */
     template <typename Intensity>
     auto collectImage(Intensity intensity)
     {
