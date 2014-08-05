@@ -1,6 +1,7 @@
 #pragma once
-#include <Math.hpp>
-#include <Ray.hpp>
+#include "Math.hpp"
+#include "Ray.hpp"
+#include <vector>
 
 namespace lc
 {
@@ -25,5 +26,7 @@ private:
     Vector origin;
     Float radius2;
 };
+
+using Spheres = std::vector<Sphere>;
 
 }
