@@ -11,7 +11,7 @@ class Sphere
 public:
     Sphere(Vector origin, Float radius) : origin{origin}, radius2{radius * radius} { }
 
-    auto intersects(Ray ray)
+    auto intersects(Ray ray) const
     {
         auto oc = ray.getOrigin() - origin;
         auto b = dot(ray.getDirection(), oc);

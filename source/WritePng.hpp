@@ -5,7 +5,7 @@
 namespace lc
 {
 
-void writePng(const Image& img, const std::string& filename)
+inline void writePng(const Image& img, const std::string& filename)
 {
     boost::gil::png_write_view(filename, const_view(img));
 }
