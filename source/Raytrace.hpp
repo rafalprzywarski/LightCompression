@@ -17,7 +17,7 @@ inline auto raytraceIntensity(Ray ray, const Spheres& spheres)
     return intersects(spheres, ray) ? 255 : 0;
 }
 
-inline Image raytrace(CameraSensor sensor, const Spheres& spheres, const LightSources& lights)
+inline Image raytraceImage(CameraSensor sensor, const Spheres& spheres, const LightSources& lights)
 {
     return sensor.collectImage([&](auto ray) { return raytraceIntensity(ray, spheres); });
 }

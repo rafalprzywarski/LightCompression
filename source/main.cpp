@@ -8,6 +8,6 @@ int main()
     lc::LightSources lights = {{{0, 0, 0}, 5}};
     lc::CameraSensor sensor{{256, 128}};
 
-    auto image = lc::raytrace(sensor, spheres, lights);
+    auto image = lc::raytraceImage(sensor, spheres, lights);
     lc::writePng(image, "scene.png");
 }
