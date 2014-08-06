@@ -2,6 +2,7 @@
 #include "Image.hpp"
 #include "CameraSensor.hpp"
 #include "Sphere.hpp"
+#include "LightSource.hpp"
 
 namespace lc
 {
@@ -11,9 +12,14 @@ inline auto intersects(const Spheres& spheres, const Ray& ray)
     return std::find_if(begin(spheres), end(spheres), [=](auto& s) { return s.intersects(ray); }) != spheres.end();
 }
 
-inline Image raytrace(CameraSensor sensor, const Spheres& spheres)
+inline auto raytraceIntensity(Ray ray, const Spheres& spheres)
 {
-    return sensor.collectImage([&](auto ray) { return intersects(spheres, ray) ? 255 : 0; });
+    return intersects(spheres, ray) ? 255 : 0;
+}
+
+inline Image raytrace(CameraSensor sensor, const Spheres& spheres, const LightSources& lights)
+{
+    return sensor.collectImage([&](auto ray) { return raytraceIntensity(ray, spheres); });
 }
 
 }
