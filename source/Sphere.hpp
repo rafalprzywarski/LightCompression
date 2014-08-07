@@ -20,6 +20,11 @@ public:
         return delta >= 0 && -2 * std::sqrt(delta) > b;
     }
 
+    auto reflect(Ray ray) const
+    {
+        return false;
+    }
+
 private:
     Point origin;
     Float radius2;
