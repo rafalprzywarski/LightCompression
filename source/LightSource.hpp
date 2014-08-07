@@ -7,7 +7,7 @@ namespace lc
 
 struct LightSource
 {
-    Vector origin;
+    Point origin;
     Float radius;
 };
 

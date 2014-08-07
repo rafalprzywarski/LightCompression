@@ -12,7 +12,8 @@ public:
     auto getOrigin() const { return origin; }
     auto getDirection() const { return direction; }
 private:
-    Vector origin, direction;
+    Point origin;
+    Vector direction;
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Ray& r)

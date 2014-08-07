@@ -21,7 +21,7 @@ public:
     }
 
 private:
-    Vector origin;
+    Point origin;
     Float radius2;
 };
 
