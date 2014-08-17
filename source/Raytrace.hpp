@@ -1,6 +1,6 @@
 #pragma once
 #include "Image.hpp"
-#include "CameraSensor.hpp"
+#include "Camera.hpp"
 #include "Sphere.hpp"
 #include "LightSource.hpp"
 
@@ -17,9 +17,9 @@ inline auto raytraceIntensity(Ray ray, const Spheres& spheres)
     return intersects(spheres, ray) ? 255 : 0;
 }
 
-inline Image raytraceImage(CameraSensor sensor, const Spheres& spheres, const LightSources& lights)
+inline Image raytraceImage(Camera camera, const Spheres& spheres, const LightSources& lights)
 {
-    return sensor.collectImage([&](auto ray) { return raytraceIntensity(ray, spheres); });
+    return camera.collectImage([&](auto ray) { return raytraceIntensity(ray, spheres); });
 }
 
 }
