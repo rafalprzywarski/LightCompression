@@ -30,7 +30,9 @@ private:
 
     Ray rayFrom(unsigned x, unsigned y) const
     {
-        return {{x * pixelSize, y * pixelSize, 0}, {0, 0, 1}};
+        return {
+            {(x - 0.5 * (size.width - 1)) * pixelSize, (y - 0.5 * (size.height - 1)) * pixelSize, 0},
+            {0, 0, 1}};
     }
     template <typename F2>
     void forEachPixel(F2 f)

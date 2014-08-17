@@ -8,7 +8,7 @@ TEST(RaytraceTest, should_trace_all_spheres)
 {
     CameraSensor sensor{{16, 8}, 1};
     Camera camera{sensor};
-    Spheres spheres{{{8, 4, 100}, 3}, {{14, 7, 200}, 4}};
+    Spheres spheres{{{0, 0, 100}, 3}, {{6, 3, 200}, 4}};
     auto img = raytraceImage(camera, spheres, {});
     auto v = view(img);
     EXPECT_EQ(0u, v(0, 0)) << "background";

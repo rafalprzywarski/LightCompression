@@ -24,11 +24,11 @@ TEST_F(CameraSensorTest, should_evaluate_intensity_for_each_pixel)
 {
     CameraSensor sensor{{4, 3}, 1};
     EXPECT_CALL(mock, intensity(_)).WillRepeatedly(Return(0));
-    EXPECT_CALL(mock, intensity(RayEq(Ray{{0, 0, 0}, {0, 0, 1}}))).WillOnce(Return(101));
-    EXPECT_CALL(mock, intensity(RayEq(Ray{{3, 0, 0}, {0, 0, 1}}))).WillOnce(Return(201));
-    EXPECT_CALL(mock, intensity(RayEq(Ray{{3, 2, 0}, {0, 0, 1}}))).WillOnce(Return(202));
-    EXPECT_CALL(mock, intensity(RayEq(Ray{{0, 2, 0}, {0, 0, 1}}))).WillOnce(Return(102));
-    EXPECT_CALL(mock, intensity(RayEq(Ray{{2, 1, 0}, {0, 0, 1}}))).WillOnce(Return(222));
+    EXPECT_CALL(mock, intensity(RayEq(Ray{{-1.5, -1, 0}, {0, 0, 1}}))).WillOnce(Return(101));
+    EXPECT_CALL(mock, intensity(RayEq(Ray{{ 1.5, -1, 0}, {0, 0, 1}}))).WillOnce(Return(201));
+    EXPECT_CALL(mock, intensity(RayEq(Ray{{ 1.5,  1, 0}, {0, 0, 1}}))).WillOnce(Return(202));
+    EXPECT_CALL(mock, intensity(RayEq(Ray{{-1.5,  1, 0}, {0, 0, 1}}))).WillOnce(Return(102));
+    EXPECT_CALL(mock, intensity(RayEq(Ray{{ 0.5,  0, 0}, {0, 0, 1}}))).WillOnce(Return(222));
 
     auto image = sensor.collectImage([this](auto ray) { return mock.intensity(ray); });
     auto v = view(image);
@@ -44,7 +44,7 @@ TEST_F(CameraSensorTest, should_scale_pixel_size)
 {
     CameraSensor sensor{{3, 5}, 0.125};
     EXPECT_CALL(mock, intensity(_)).WillRepeatedly(Return(0));
-    EXPECT_CALL(mock, intensity(RayEq(Ray{{2 * 0.125, 4 * 0.125, 0}, {0, 0, 1}}))).WillOnce(Return(202));
+    EXPECT_CALL(mock, intensity(RayEq(Ray{{1 * 0.125, 2 * 0.125, 0}, {0, 0, 1}}))).WillOnce(Return(202));
 
     auto image = sensor.collectImage([this](auto ray) { return mock.intensity(ray); });
     auto v = view(image);
