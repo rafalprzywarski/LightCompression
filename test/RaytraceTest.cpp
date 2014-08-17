@@ -6,7 +6,7 @@ namespace lc
 
 TEST(RaytraceTest, should_trace_all_spheres)
 {
-    CameraSensor sensor{{16, 8}};
+    CameraSensor sensor{{16, 8}, 1};
     Spheres spheres{{{8, 4, 100}, 3}, {{14, 7, 200}, 4}};
     auto img = raytraceImage(sensor, spheres, {});
     auto v = view(img);

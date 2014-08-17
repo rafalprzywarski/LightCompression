@@ -13,7 +13,7 @@ struct SensorSize
 class CameraSensor
 {
 public:
-    CameraSensor(SensorSize size, Float pixelSize = 1)
+    CameraSensor(SensorSize size, Float pixelSize)
         : size(size), pixelSize(pixelSize) { }
     template <typename Intensity>
     auto collectImage(Intensity intensity)
