@@ -10,10 +10,11 @@ struct SensorSize
     unsigned width, height;
 };
 
-struct CameraSensor
+class CameraSensor
 {
-    SensorSize size;
-
+public:
+    CameraSensor(SensorSize size, Float pixelSize = 1)
+        : size(size), pixelSize(pixelSize) { }
     template <typename Intensity>
     auto collectImage(Intensity intensity)
     {
@@ -24,9 +25,12 @@ struct CameraSensor
     }
 
 private:
+    SensorSize size;
+    Float pixelSize;
+
     Ray rayFrom(unsigned x, unsigned y) const
     {
-        return {{Float(x), Float(y), 0}, {0, 0, 1}};
+        return {{x * pixelSize, y * pixelSize, 0}, {0, 0, 1}};
     }
     template <typename F2>
     void forEachPixel(F2 f)

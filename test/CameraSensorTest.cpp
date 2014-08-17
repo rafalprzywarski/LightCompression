@@ -22,7 +22,7 @@ struct CameraSensorTest : testing::Test
 
 TEST_F(CameraSensorTest, should_evaluate_intensity_for_each_pixel)
 {
-    CameraSensor sensor{{4, 3}};
+    CameraSensor sensor{{4, 3}, 1};
     EXPECT_CALL(mock, intensity(_)).WillRepeatedly(Return(0));
     EXPECT_CALL(mock, intensity(RayEq(Ray{{0, 0, 0}, {0, 0, 1}}))).WillOnce(Return(101));
     EXPECT_CALL(mock, intensity(RayEq(Ray{{3, 0, 0}, {0, 0, 1}}))).WillOnce(Return(201));
@@ -38,6 +38,18 @@ TEST_F(CameraSensorTest, should_evaluate_intensity_for_each_pixel)
     EXPECT_EQ(202, v(3, 2));
     EXPECT_EQ(102, v(0, 2));
     EXPECT_EQ(222, v(2, 1));
+}
+
+TEST_F(CameraSensorTest, should_scale_pixel_size)
+{
+    CameraSensor sensor{{3, 5}, 0.125};
+    EXPECT_CALL(mock, intensity(_)).WillRepeatedly(Return(0));
+    EXPECT_CALL(mock, intensity(RayEq(Ray{{2 * 0.125, 4 * 0.125, 0}, {0, 0, 1}}))).WillOnce(Return(202));
+
+    auto image = sensor.collectImage([this](auto ray) { return mock.intensity(ray); });
+    auto v = view(image);
+
+    EXPECT_EQ(202, v(2, 4));
 }
 
 }
