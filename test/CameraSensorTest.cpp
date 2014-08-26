@@ -1,15 +1,11 @@
 #include <gmock/gmock.h>
 #include <CameraSensor.hpp>
+#include "RayHelpers.hpp"
 
 using namespace testing;
 
 namespace lc
 {
-
-MATCHER_P(RayEq, expected, "")
-{
-    return arg.getOrigin() == expected.getOrigin() && arg.getDirection() == expected.getDirection();
-}
 
 struct CameraSensorTest : testing::Test
 {
