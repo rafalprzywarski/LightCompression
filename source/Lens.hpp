@@ -9,15 +9,15 @@ class ThinLens
 {
 public:
     ThinLens(Float zDistance, Float focalLength)
-    : zDistance(zDistance), focalLength(focalLength) { }
-    Ray refract(Ray r) const
+    : zDistance(zDistance), focalPoint{0, 0, zDistance + focalLength} { }
+    auto refract(Ray r) const
     {
-        Vector originAtLens{r.getOrigin()[0], r.getOrigin()[1], zDistance};
-        Vector focalPoint = Vector{0, 0, zDistance + focalLength};
+        Point originAtLens{r.getOrigin()[0], r.getOrigin()[1], zDistance};
         return Ray{originAtLens, focalPoint - originAtLens};
     }
 private:
-    Float zDistance, focalLength;
+    Float zDistance;
+    Point focalPoint;
 };
 
 }
