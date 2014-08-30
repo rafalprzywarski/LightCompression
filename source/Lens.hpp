@@ -1,6 +1,6 @@
 #pragma once
-#include <Math.hpp>
-#include <Ray.hpp>
+#include "Math.hpp"
+#include "Ray.hpp"
 
 namespace lc
 {
