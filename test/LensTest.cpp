@@ -14,6 +14,11 @@ struct LensTest : testing::Test
     ThinLens lens{Z_DISTANCE, FOCAL_LENGTH};
     Point FOCAL_POINT{0, 0, Z_DISTANCE + FOCAL_LENGTH};
     Float EPS = 1e-5f;
+
+    auto rayFromTo(Point from, Point to) const
+    {
+        return Ray{from, to - from};
+    }
 };
 
 TEST_F(LensTest, central_ray_should_pass_through)
@@ -33,6 +38,20 @@ TEST_F(LensTest, parallel_rays_should_pass_through_the_focal_point)
         EXPECT_THAT(refracted, RayPassesThrough(FOCAL_POINT, EPS));
         EXPECT_NEAR(ray.getOrigin()[0], refracted.getOrigin()[0], EPS);
         EXPECT_NEAR(ray.getOrigin()[1], refracted.getOrigin()[1], EPS);
+        EXPECT_NEAR(Z_DISTANCE, refracted.getOrigin()[2], EPS);
+    }
+}
+
+TEST_F(LensTest, DISABLED_rays_passing_though_the_focal_point_should_become_parallel)
+{
+    Ray rays[]{
+        rayFromTo({1, 2, 0}, FOCAL_POINT),
+        rayFromTo({-3, 4, 1}, FOCAL_POINT),
+        rayFromTo({4, 1, -3}, FOCAL_POINT)};
+    for (auto& ray : rays)
+    {
+        auto refracted = lens.refract(ray);
+        EXPECT_THAT(refracted, RayHasDirection(DIR_Z, EPS));
         EXPECT_NEAR(Z_DISTANCE, refracted.getOrigin()[2], EPS);
     }
 }
