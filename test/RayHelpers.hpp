@@ -11,10 +11,11 @@ MATCHER_P(RayEq, expected, "")
 
 MATCHER_P2(RayPassesThrough, pt, eps, "")
 {
-    auto ptDir = pt - arg.getOrigin();
+    auto ptDir = arg.getOrigin() - pt;
     auto dir = arg.getDirection();
-
-    return cross(ptDir, dir).length() < eps;
+    auto distance = cross(ptDir, dir).length();
+    *result_listener << "missed by " << distance;
+    return distance < eps;
 }
 
 MATCHER_P2(RayHasDirection, dir, eps, "")
