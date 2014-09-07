@@ -9,27 +9,34 @@ class ThinLens
 {
 public:
     ThinLens(Float zDistance, Float focalLength)
-    : zDistance(zDistance), focalPoint{0, 0, zDistance + focalLength}, focalLength(focalLength) { }
+    : zDistance(zDistance), focalLength(focalLength) { }
     auto refract(Ray r) const
     {
         Point originAtLens = getLensIntersection(r);
-        return Ray{originAtLens, getFocalPoint(r) - originAtLens};
+        return Ray{originAtLens, getFocalPoint(r.getDirection()) - originAtLens};
     }
 private:
     Float zDistance;
-    Point focalPoint;
     Float focalLength;
 
     Point getLensIntersection(Ray r) const
     {
-        auto t = (zDistance - r.getOrigin()[2]) / r.getDirection()[2];
-        return r.getOrigin() + t * r.getDirection();
+        auto orig = r.getOrigin();
+        auto dir = r.getDirection();
+        auto dist = (zDistance - orig[2]) / dir[2];
+        return {orig[0] + dist * dir[0], orig[1] + dist * dir[1], zDistance};
     }
 
-    Point getFocalPoint(Ray r) const
+    Point getLocalFocalPoint(Vector dir) const
     {
-        auto D = r.getDirection();
-        return {D[0] / D[2] * focalLength, D[1] / D[2] * focalLength, zDistance + focalLength};
+        using std::abs;
+        return dir * (focalLength / abs(dir[2]));
+    }
+    Point getFocalPoint(Vector dir) const
+    {
+        auto focalPoint = getLocalFocalPoint(dir);
+        focalPoint[2] += zDistance;
+        return focalPoint;
     }
 };
 

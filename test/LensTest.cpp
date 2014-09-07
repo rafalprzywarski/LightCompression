@@ -52,7 +52,7 @@ TEST_F(LensTest, parallel_rays_should_pass_through_the_focal_point)
     }
 }
 
-TEST_F(LensTest, DISABLED_rays_passing_though_the_focal_point_should_become_parallel)
+TEST_F(LensTest, rays_passing_though_the_focal_point_should_become_parallel)
 {
     Point destinationPoints[]{
         {1, 2, Z_DISTANCE},
