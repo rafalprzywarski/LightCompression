@@ -40,4 +40,18 @@ private:
     }
 };
 
+class TwoElementCameraLens
+{
+public:
+    TwoElementCameraLens(ThinLens first, ThinLens second)
+    : first(first), second(second) { }
+    Ray refract(Ray r) const
+    {
+        return second.refract(first.refract(r));
+    }
+public:
+    ThinLens first;
+    ThinLens second;
+};
+
 }

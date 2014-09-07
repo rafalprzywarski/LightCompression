@@ -7,6 +7,7 @@ add_executable(lightcompressiontest
     RaytraceTest.cpp
     CameraSensorTest.cpp
     LensTest.cpp
+    TwoElementCameraLensTest.cpp
 )
 
 target_link_libraries(lightcompressiontest ${Boost_LIBRARIES} gmock pthread)
