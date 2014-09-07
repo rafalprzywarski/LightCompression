@@ -1,13 +1,19 @@
 #include <gtest/gtest.h>
 #include <Raytrace.hpp>
 #include <Lens.hpp>
+#include <Distribution.hpp>
 
 namespace lc
 {
 
-TEST(RaytraceTest, should_trace_all_spheres)
+struct RaytraceTest : testing::Test
 {
-    CameraSensor sensor{{16, 8}, 1};
+    DirectRayOnly directRayOnly;
+};
+
+TEST_F(RaytraceTest, should_trace_all_spheres)
+{
+    auto sensor = createCameraSensor({16, 8}, 1, directRayOnly);
     ThinLens lens{0, 1000};
     auto camera = createCamera(sensor, lens);
     Spheres spheres{{{0, 0, 100}, 3}, {{6, 3, 200}, 4}};
@@ -21,9 +27,9 @@ TEST(RaytraceTest, should_trace_all_spheres)
     EXPECT_EQ(255u, v(14, 7)) << "second sphere";
 }
 
-TEST(RaytraceTest, should_trace_using_lens)
+TEST_F(RaytraceTest, should_trace_using_lens)
 {
-    CameraSensor sensor{{8, 8}, 1};
+    auto sensor = createCameraSensor({8, 8}, 1, directRayOnly);
     Float FOCAL_LENGTH = Float{8} / 3;
     ThinLens lens{0, FOCAL_LENGTH};
     auto camera = createCamera(sensor, lens);

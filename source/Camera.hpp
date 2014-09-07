@@ -4,7 +4,7 @@
 namespace lc
 {
 
-template <typename Lens>
+template <typename CameraSensor, typename Lens>
 class Camera
 {
 public:
@@ -20,8 +20,8 @@ private:
     Lens lens;
 };
 
-template <typename Lens>
-Camera<Lens> createCamera(CameraSensor sensor, Lens lens)
+template <typename CameraSensor, typename Lens>
+Camera<CameraSensor, Lens> createCamera(CameraSensor sensor, Lens lens)
 {
     return {std::move(sensor), std::move(lens)};
 }
