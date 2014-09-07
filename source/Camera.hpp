@@ -1,14 +1,14 @@
 #pragma once
 #include "CameraSensor.hpp"
-#include "Lens.hpp"
 
 namespace lc
 {
 
+template <typename Lens>
 class Camera
 {
 public:
-    explicit Camera(CameraSensor sensor, ThinLens lens) : sensor(sensor), lens(lens) { }
+    Camera(CameraSensor sensor, Lens lens) : sensor(sensor), lens(lens) { }
 
     template <typename Intensity>
     auto collectImage(Intensity intensity)
@@ -17,7 +17,13 @@ public:
     }
 private:
     CameraSensor sensor;
-    ThinLens lens;
+    Lens lens;
 };
+
+template <typename Lens>
+Camera<Lens> createCamera(CameraSensor sensor, Lens lens)
+{
+    return {std::move(sensor), std::move(lens)};
+}
 
 }

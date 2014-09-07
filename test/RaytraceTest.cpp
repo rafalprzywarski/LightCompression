@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <Raytrace.hpp>
+#include <Lens.hpp>
 
 namespace lc
 {
@@ -8,7 +9,7 @@ TEST(RaytraceTest, should_trace_all_spheres)
 {
     CameraSensor sensor{{16, 8}, 1};
     ThinLens lens{0, 1000};
-    Camera camera{sensor, lens};
+    auto camera = createCamera(sensor, lens);
     Spheres spheres{{{0, 0, 100}, 3}, {{6, 3, 200}, 4}};
     auto img = raytraceImage(camera, spheres, {});
     auto v = view(img);
@@ -25,7 +26,7 @@ TEST(RaytraceTest, should_trace_using_lens)
     CameraSensor sensor{{8, 8}, 1};
     Float FOCAL_LENGTH = Float{8} / 3;
     ThinLens lens{0, FOCAL_LENGTH};
-    Camera camera{sensor, lens};
+    auto camera = createCamera(sensor, lens);
     Spheres spheres{{{0, 0, FOCAL_LENGTH + 5}, 3}};
     auto img = raytraceImage(camera, spheres, {});
     auto v = view(img);
