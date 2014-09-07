@@ -29,9 +29,9 @@ int main()
         {{ 30, 0, 260}, 15},
     };
     lc::LightSources lights = {{{0, 0, 0}, 5}};
-    lc::FixedDistribution distribution = circle(5, 32);
-    auto sensor = lc::createCameraSensor({512, 256}, 0.005, distribution);
-    lc::TwoElementCameraLens lens{{0, 1}, {3.05, 3}};
+    lc::FixedDistribution distribution = circle(10, 32);
+    auto sensor = lc::createCameraSensor({1024, 512}, 0.0025, distribution);
+    lc::ThinLens lens{2, 1.9775};
     auto camera = lc::createCamera(sensor, lens);
 
     auto image = lc::raytraceImage(camera, spheres, lights);
