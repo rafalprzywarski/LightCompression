@@ -20,7 +20,7 @@ MATCHER_P2(RayPassesThrough, pt, eps, "")
 
 MATCHER_P2(RayHasDirection, dir, eps, "")
 {
-    return cross(arg.getDirection(), dir).length() < eps;
+    return cross(arg.getDirection(), dir).length() <= eps;
 }
 
 }

@@ -50,4 +50,19 @@ TEST_F(CameraSensorTest, should_scale_pixel_size)
     EXPECT_EQ(202, v(2, 4));
 }
 
+TEST_F(CameraSensorTest, should_use_the_distribution)
+{
+    Vector DIR1{1, 0, 0}, DIR2{0, 1, 0}, DIR3{0, 0, 1};
+    FixedDistribution distribution{{DIR1, DIR2, DIR3}};
+    auto sensor = createCameraSensor({1, 1}, 1, distribution);
+
+    EXPECT_CALL(mock, intensity(RayHasDirection(DIR1, 0))).WillOnce(Return(1 * 3));
+    EXPECT_CALL(mock, intensity(RayHasDirection(DIR2, 0))).WillOnce(Return(2 * 3));
+    EXPECT_CALL(mock, intensity(RayHasDirection(DIR3, 0))).WillOnce(Return(4 * 3));
+
+    auto image = sensor.collectImage([this](auto ray) { return mock.intensity(ray); });
+
+    EXPECT_EQ(1 + 2 + 4, view(image)(0, 0));
+}
+
 }
