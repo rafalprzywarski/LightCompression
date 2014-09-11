@@ -2,7 +2,6 @@
 #include "Image.hpp"
 #include "Camera.hpp"
 #include "Sphere.hpp"
-#include "LightSource.hpp"
 
 namespace lc
 {
@@ -18,9 +17,9 @@ inline auto raytraceIntensity(Ray ray, const Spheres& spheres)
 }
 
 template <typename Camera>
-inline Image raytraceImage(Camera camera, const Spheres& spheres, const LightSources& lights)
+inline Image raytraceImage(Camera camera, const Spheres& spheres, const Spheres& lights)
 {
-    return camera.collectImage([&](auto ray) { return raytraceIntensity(ray, spheres); });
+    return camera.collectImage([&](auto ray) { return raytraceIntensity(ray, lights); });
 }
 
 }
