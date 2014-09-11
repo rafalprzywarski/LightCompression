@@ -17,7 +17,7 @@ TEST_F(RaytraceTest, should_trace_all_lights)
     ThinLens lens{0, 1000};
     auto camera = createCamera(sensor, lens);
     Spheres lights{{{0, 0, 100}, 3}, {{6, 3, 200}, 4}};
-    auto img = raytraceImage(camera, {}, lights);
+    auto img = Scene{{}, lights}.raytraceImage(camera);
     auto v = view(img);
     EXPECT_EQ(0u, v(0, 0)) << "background";
     EXPECT_EQ(0u, v(8, 0)) << "background";
@@ -34,7 +34,7 @@ TEST_F(RaytraceTest, should_trace_using_lens)
     ThinLens lens{0, FOCAL_LENGTH};
     auto camera = createCamera(sensor, lens);
     Spheres lights{{{0, 0, FOCAL_LENGTH + 5}, 3}};
-    auto img = raytraceImage(camera, {}, lights);
+    auto img = Scene{{}, lights}.raytraceImage(camera);
     auto v = view(img);
     EXPECT_EQ(255u, v(4, 4));
     EXPECT_EQ(255u, v(4, 5));
@@ -49,7 +49,7 @@ TEST_F(RaytraceTest, should_trace_reflective_spheres)
     auto camera = createCamera(sensor, lens);
     Sphere light{{5, 0, 3}, 1};
     Sphere sphere{{-1, 0, 4}, std::sqrt(Float(2))};
-    auto img = raytraceImage(camera, {sphere}, {light});
+    auto img = Scene{{sphere}, {light}}.raytraceImage(camera);
     auto v = view(img);
     EXPECT_EQ(0u, v(2, 0)) << "sphere missed";
     EXPECT_EQ(255u, v(1, 0)) << "reflected light";

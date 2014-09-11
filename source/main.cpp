@@ -29,11 +29,12 @@ int main()
         {{ 30, 0, 260}, 15},
     };
     lc::Spheres spheres = {{{30, 0, 180}, 15}};
+    lc::Scene scene{spheres, lights};
     lc::FixedDistribution distribution = circle(5, 12);
     auto sensor = lc::createCameraSensor({512, 256}, 0.0045, distribution);
     lc::ThinLens lens{2, 1.9775};
     auto camera = lc::createCamera(sensor, lens);
 
-    auto image = lc::raytraceImage(camera, spheres, lights);
+    auto image = scene.raytraceImage(camera);
     lc::writePng(image, "scene.png");
 }

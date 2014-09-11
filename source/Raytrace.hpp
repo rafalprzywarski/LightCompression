@@ -6,28 +6,40 @@
 namespace lc
 {
 
-inline auto intersects(const Spheres& spheres, const Ray& ray)
+class Scene
 {
-    return std::find_if(begin(spheres), end(spheres), [=](auto& s) { return s.intersects(ray); }) != spheres.end();
-}
+public:
+    Scene(Spheres spheres, Spheres lights)
+        : spheres(std::move(spheres)), lights(std::move(lights)) { }
 
-inline auto reflectRay(Ray ray, const Spheres& spheres)
-{
-    if (!spheres.empty())
-        if (auto r = spheres[0].reflect(ray))
-            return *r;
-    return ray;
-}
+    template <typename Camera>
+    Image raytraceImage(Camera camera)
+    {
+        return camera.collectImage([&](auto ray) { return raytraceIntensity(ray); });
+    }
+private:
+    Spheres spheres, lights;
 
-inline auto raytraceIntensity(Ray ray, const Spheres& spheres, const Spheres& lights)
-{
-    return intersects(lights, reflectRay(ray, spheres)) ? 255 : 0;
-}
+    auto reflectRay(Ray ray)
+    {
+        if (!spheres.empty())
+            if (auto r = spheres[0].reflect(ray))
+                return *r;
+        return ray;
+    }
 
-template <typename Camera>
-inline Image raytraceImage(Camera camera, const Spheres& spheres, const Spheres& lights)
-{
-    return camera.collectImage([&](auto ray) { return raytraceIntensity(ray, spheres, lights); });
-}
+    auto intersects(const Ray& ray)
+    {
+        return std::find_if(
+            begin(lights), end(lights),
+            [=](auto& s) { return s.intersects(ray); }) != lights.end();
+    }
+
+
+    Float raytraceIntensity(Ray ray)
+    {
+        return intersects(reflectRay(ray)) ? 255 : 0;
+    }
+};
 
 }
