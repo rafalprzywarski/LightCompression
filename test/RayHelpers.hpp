@@ -23,4 +23,9 @@ MATCHER_P2(RayHasDirection, dir, eps, "")
     return cross(arg.getDirection(), dir).length() <= eps;
 }
 
+MATCHER_P2(RayHasOrigin, orig, eps, "")
+{
+    return (arg.getOrigin() - orig).length() <= eps;
+}
+
 }
