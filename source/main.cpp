@@ -28,9 +28,9 @@ int main()
         {{ 15, 0, 220}, 15},
         {{ 30, 0, 260}, 15},
     };
-    lc::Spheres spheres = {};
+    lc::Spheres spheres = {{{30, 0, 180}, 15}};
     lc::FixedDistribution distribution = circle(5, 12);
-    auto sensor = lc::createCameraSensor({1024, 512}, 0.0025, distribution);
+    auto sensor = lc::createCameraSensor({512, 256}, 0.0045, distribution);
     lc::ThinLens lens{2, 1.9775};
     auto camera = lc::createCamera(sensor, lens);
 

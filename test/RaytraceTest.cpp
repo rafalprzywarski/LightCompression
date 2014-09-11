@@ -42,5 +42,19 @@ TEST_F(RaytraceTest, should_trace_using_lens)
     EXPECT_EQ(0u, v(4, 7));
 }
 
+TEST_F(RaytraceTest, should_trace_reflective_spheres)
+{
+    auto sensor = createCameraSensor({3, 1}, 1, directRayOnly);
+    ThinLens lens{0, 100000};
+    auto camera = createCamera(sensor, lens);
+    Sphere light{{5, 0, 3}, 1};
+    Sphere sphere{{-1, 0, 4}, std::sqrt(Float(2))};
+    auto img = raytraceImage(camera, {sphere}, {light});
+    auto v = view(img);
+    EXPECT_EQ(0u, v(2, 0)) << "sphere missed";
+    EXPECT_EQ(255u, v(1, 0)) << "reflected light";
+    EXPECT_EQ(0u, v(0, 0)) << "no reflection of light";
+}
+
 
 }
