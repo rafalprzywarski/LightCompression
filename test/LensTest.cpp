@@ -62,7 +62,7 @@ TEST_F(LensTest, rays_passing_though_the_focal_point_should_become_parallel)
     {
         auto ray = rayFromTo(FOCAL_POINT, to);
         auto refracted = lens.refract(ray);
-        EXPECT_THAT(refracted, RayHasDirection(DIR_Z, EPS));
+        EXPECT_THAT(refracted, RayHasDirection(-DIR_Z, EPS));
         EXPECT_NEAR(to[0], refracted.getOrigin()[0], EPS);
         EXPECT_NEAR(to[1], refracted.getOrigin()[1], EPS);
         EXPECT_NEAR(to[2], refracted.getOrigin()[2], EPS);

@@ -34,7 +34,7 @@ private:
 
     static Vector reflect(Vector normal, Vector direction)
     {
-        return dot(normal, direction) * 2 * normal - direction;
+        return direction - dot(normal, direction) * 2 * normal;
     }
 
     boost::optional<Float> getDistance(Ray ray) const
