@@ -1,5 +1,5 @@
 #pragma once
-#include "Sphere.hpp"
+#include "Light.hpp"
 
 namespace lc
 {
@@ -10,7 +10,7 @@ template <typename Spheres>
 class Scene
 {
 public:
-    Scene(Spheres spheres, geom::Spheres lights)
+    Scene(Spheres spheres, Lights lights)
         : spheres(std::move(spheres)), lights(std::move(lights)) { }
 
     template <typename Camera>
@@ -20,7 +20,7 @@ public:
     }
 private:
     Spheres spheres;
-    geom::Spheres lights;
+    Lights lights;
 
     auto reflectRay(Ray ray)
     {
@@ -30,22 +30,22 @@ private:
         return ray;
     }
 
-    auto intersects(const Ray& ray)
+    auto doesHitAnyLight(const Ray& ray)
     {
         return std::find_if(
             begin(lights), end(lights),
-            [=](auto& s) { return s.intersects(ray); }) != lights.end();
+            [=](auto& s) { return s.isHitBy(ray); }) != lights.end();
     }
 
 
     Float raytraceIntensity(Ray ray)
     {
-        return intersects(reflectRay(ray)) ? 255 : 0;
+        return doesHitAnyLight(reflectRay(ray)) ? 255 : 0;
     }
 };
 
 template <typename Spheres>
-Scene<Spheres> createScene(Spheres spheres, geom::Spheres lights)
+Scene<Spheres> createScene(Spheres spheres, Lights lights)
 {
     return {std::move(spheres), std::move(lights)};
 }

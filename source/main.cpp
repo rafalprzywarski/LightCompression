@@ -1,5 +1,6 @@
 #include <vector>
 #include "scene/Scene.hpp"
+#include "scene/Sphere.hpp"
 #include "Camera.hpp"
 #include "Lens.hpp"
 #include "Distribution.hpp"
@@ -22,12 +23,12 @@ lc::FixedDistribution circle(lc::Float radius, unsigned N)
 
 int main()
 {
-    lc::geom::Spheres lights = {
-        {{-30, 0, 100}, 15},
-        {{-15, 0, 140}, 15},
-        {{  0, 0, 180}, 15},
-        {{ 15, 0, 220}, 15},
-        {{ 30, 0, 260}, 15},
+    lc::scene::Lights lights = {
+        {{{-30, 0, 100}, 15}},
+        {{{-15, 0, 140}, 15}},
+        {{{  0, 0, 180}, 15}},
+        {{{ 15, 0, 220}, 15}},
+        {{{ 30, 0, 260}, 15}},
     };
     lc::scene::Spheres<void> spheres = {{{{30, 0, 180}, 15}}};
     auto scene = createScene(spheres, lights);
