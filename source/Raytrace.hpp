@@ -6,10 +6,11 @@
 namespace lc
 {
 
+template <typename Spheres>
 class Scene
 {
 public:
-    Scene(Spheres spheres, Spheres lights)
+    Scene(Spheres spheres, geom::Spheres lights)
         : spheres(std::move(spheres)), lights(std::move(lights)) { }
 
     template <typename Camera>
@@ -18,7 +19,8 @@ public:
         return camera.collectImage([&](auto ray) { return raytraceIntensity(ray); });
     }
 private:
-    Spheres spheres, lights;
+    Spheres spheres;
+    geom::Spheres lights;
 
     auto reflectRay(Ray ray)
     {
@@ -41,5 +43,12 @@ private:
         return intersects(reflectRay(ray)) ? 255 : 0;
     }
 };
+
+template <typename Spheres>
+Scene<Spheres> createScene(Spheres spheres, geom::Spheres lights)
+{
+    return {std::move(spheres), std::move(lights)};
+}
+
 
 }

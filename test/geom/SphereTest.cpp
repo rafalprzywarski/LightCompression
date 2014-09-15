@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
 #include <Sphere.hpp>
-#include "RayHelpers.hpp"
+#include "../RayHelpers.hpp"
 
 namespace lc
+{
+namespace geom
 {
 
 struct SphereTest : testing::Test
@@ -32,4 +34,5 @@ TEST_F(SphereTest, should_reflect_when_ray_hits)
     EXPECT_THAT(reflected, RayHasDirection(Vector{Float(-7)/25, Float(24)/25, 0}, EPS));
 }
 
+}
 }

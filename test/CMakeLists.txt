@@ -3,7 +3,7 @@ include_directories("../source")
 
 add_executable(lightcompressiontest
     main.cpp
-    SphereTest.cpp
+    geom/SphereTest.cpp
     RaytraceTest.cpp
     CameraSensorTest.cpp
     LensTest.cpp

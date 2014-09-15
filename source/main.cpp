@@ -21,15 +21,15 @@ lc::FixedDistribution circle(lc::Float radius, unsigned N)
 
 int main()
 {
-    lc::Spheres lights = {
+    lc::geom::Spheres lights = {
         {{-30, 0, 100}, 15},
         {{-15, 0, 140}, 15},
         {{  0, 0, 180}, 15},
         {{ 15, 0, 220}, 15},
         {{ 30, 0, 260}, 15},
     };
-    lc::Spheres spheres = {{{30, 0, 180}, 15}};
-    lc::Scene scene{spheres, lights};
+    lc::Spheres<void> spheres = {{{{30, 0, 180}, 15}}};
+    auto scene = createScene(spheres, lights);
     lc::FixedDistribution distribution = circle(5, 12);
     auto sensor = lc::createCameraSensor({512, 256}, 0.0045, distribution);
     lc::ThinLens lens{2, 1.9775};
