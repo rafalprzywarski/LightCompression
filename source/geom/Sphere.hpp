@@ -22,12 +22,20 @@ public:
 
     boost::optional<Ray> reflect(Ray ray) const
     {
+        auto normal = getSurfaceNormalRay(ray);
+        if (!normal)
+            return {};
+        return Ray{normal->getOrigin(), reflect(normal->getDirection(), ray.getDirection())};
+    }
+
+    boost::optional<Ray> getSurfaceNormalRay(Ray ray) const
+    {
         auto distance = getDistance(ray);
         if (!distance || *distance < 0)
             return {};
         auto intersectionPoint = ray.getOrigin() + *distance * ray.getDirection();
         auto normal = normalize(intersectionPoint - origin);
-        return Ray{intersectionPoint, reflect(normal, ray.getDirection())};
+        return Ray{intersectionPoint, normal};
     }
 
 private:
