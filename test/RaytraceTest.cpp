@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <Raytrace.hpp>
+#include <Scene.hpp>
 #include <Lens.hpp>
 #include <Distribution.hpp>
 

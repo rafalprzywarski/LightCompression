@@ -1,5 +1,5 @@
 #include <vector>
-#include "Raytrace.hpp"
+#include "Scene.hpp"
 #include "Lens.hpp"
 #include "Distribution.hpp"
 #include "WritePng.hpp"
