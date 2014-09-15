@@ -1,7 +1,9 @@
 #pragma once
-#include "geom/Sphere.hpp"
+#include "../geom/Sphere.hpp"
 
 namespace lc
+{
+namespace scene
 {
 
 template <typename Material>
@@ -17,4 +19,5 @@ private:
 template <typename Material>
 using Spheres = std::vector<Sphere<Material>>;
 
+}
 }

@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
-#include <Scene.hpp>
+#include <scene/Scene.hpp>
+#include <Camera.hpp>
 #include <Lens.hpp>
 #include <Distribution.hpp>
 
@@ -17,7 +18,7 @@ TEST_F(RaytraceTest, should_trace_all_lights)
     ThinLens lens{0, 1000};
     auto camera = createCamera(sensor, lens);
     geom::Spheres lights{{{0, 0, 100}, 3}, {{6, 3, 200}, 4}};
-    auto img = createScene(Spheres<void>{}, lights).raytraceImage(camera);
+    auto img = scene::createScene(scene::Spheres<void>{}, lights).raytraceImage(camera);
     auto v = view(img);
     EXPECT_EQ(0u, v(0, 0)) << "background";
     EXPECT_EQ(0u, v(8, 0)) << "background";
@@ -34,7 +35,7 @@ TEST_F(RaytraceTest, should_trace_using_lens)
     ThinLens lens{0, FOCAL_LENGTH};
     auto camera = createCamera(sensor, lens);
     geom::Spheres lights{{{0, 0, FOCAL_LENGTH + 5}, 3}};
-    auto img = createScene(Spheres<void>{}, lights).raytraceImage(camera);
+    auto img = createScene(scene::Spheres<void>{}, lights).raytraceImage(camera);
     auto v = view(img);
     EXPECT_EQ(255u, v(4, 4));
     EXPECT_EQ(255u, v(4, 5));
@@ -48,8 +49,8 @@ TEST_F(RaytraceTest, should_trace_reflective_spheres)
     ThinLens lens{0, 100000};
     auto camera = createCamera(sensor, lens);
     geom::Sphere light{{5, 0, 3}, 1};
-    Sphere<void> sphere{{{-1, 0, 4}, std::sqrt(Float(2))}};
-    auto img = createScene(Spheres<void>{sphere}, {light}).raytraceImage(camera);
+    scene::Sphere<void> sphere{{{-1, 0, 4}, std::sqrt(Float(2))}};
+    auto img = scene::createScene(scene::Spheres<void>{sphere}, {light}).raytraceImage(camera);
     auto v = view(img);
     EXPECT_EQ(0u, v(2, 0)) << "sphere missed";
     EXPECT_EQ(255u, v(1, 0)) << "reflected light";

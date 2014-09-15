@@ -1,5 +1,6 @@
 #include <vector>
-#include "Scene.hpp"
+#include "scene/Scene.hpp"
+#include "Camera.hpp"
 #include "Lens.hpp"
 #include "Distribution.hpp"
 #include "WritePng.hpp"
@@ -28,7 +29,7 @@ int main()
         {{ 15, 0, 220}, 15},
         {{ 30, 0, 260}, 15},
     };
-    lc::Spheres<void> spheres = {{{{30, 0, 180}, 15}}};
+    lc::scene::Spheres<void> spheres = {{{{30, 0, 180}, 15}}};
     auto scene = createScene(spheres, lights);
     lc::FixedDistribution distribution = circle(5, 12);
     auto sensor = lc::createCameraSensor({512, 256}, 0.0045, distribution);

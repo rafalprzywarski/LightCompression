@@ -1,9 +1,9 @@
 #pragma once
-#include "Image.hpp"
-#include "Camera.hpp"
 #include "Sphere.hpp"
 
 namespace lc
+{
+namespace scene
 {
 
 template <typename Spheres>
@@ -14,7 +14,7 @@ public:
         : spheres(std::move(spheres)), lights(std::move(lights)) { }
 
     template <typename Camera>
-    Image raytraceImage(Camera camera)
+    auto raytraceImage(Camera camera)
     {
         return camera.collectImage([&](auto ray) { return raytraceIntensity(ray); });
     }
@@ -51,4 +51,5 @@ Scene<Spheres> createScene(Spheres spheres, geom::Spheres lights)
 }
 
 
+}
 }
