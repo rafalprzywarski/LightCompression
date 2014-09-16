@@ -21,14 +21,6 @@ public:
         return distance && *distance >= 0;
     }
 
-    boost::optional<Ray> reflect(Ray ray) const
-    {
-        auto normal = getSurfaceNormalRay(ray);
-        if (!normal)
-            return {};
-        return Ray{normal->getOrigin(), geom::reflect(normal->getDirection(), ray.getDirection())};
-    }
-
     boost::optional<Ray> getSurfaceNormalRay(Ray ray) const
     {
         auto distance = getDistance(ray);
