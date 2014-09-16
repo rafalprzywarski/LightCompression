@@ -4,6 +4,7 @@
 #include "Camera.hpp"
 #include "geom/Lens.hpp"
 #include "Distribution.hpp"
+#include "scene/Material.hpp"
 #include "WritePng.hpp"
 
 lc::FixedDistribution circle(lc::Float radius, unsigned N)
@@ -30,7 +31,8 @@ int main()
         {{{ 15, 0, 220}, 15}},
         {{{ 30, 0, 260}, 15}},
     };
-    lc::scene::Spheres<void> spheres = {{{{30, 0, 180}, 15}}};
+    lc::scene::MirrorMaterial material;
+    lc::scene::Spheres<lc::scene::MirrorMaterial> spheres = {{{{30, 0, 180}, 15}, material}};
     auto scene = createScene(spheres, lights);
     lc::FixedDistribution distribution = circle(5, 12);
     auto sensor = lc::createCameraSensor({512, 256}, 0.0045, distribution);

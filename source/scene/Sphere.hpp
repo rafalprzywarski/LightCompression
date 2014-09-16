@@ -10,10 +10,18 @@ template <typename Material>
 class Sphere
 {
 public:
-    Sphere(geom::Sphere sphere) : sphere(sphere) { }
-    auto reflect(LightRay ray) const { return sphere.reflect(ray); }
+    Sphere(geom::Sphere sphere, Material material)
+        : sphere(sphere), material(material) { }
+    boost::optional<LightRay> reflect(LightRay ray) const
+    {
+        auto normal = sphere.getSurfaceNormalRay(ray);
+        if (!normal)
+            return {};
+        return material.getReflectionRay(ray.getDirection(), *normal);
+    }
 private:
     geom::Sphere sphere;
+    Material material;
 };
 
 template <typename Material>

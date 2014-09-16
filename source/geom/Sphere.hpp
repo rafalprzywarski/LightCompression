@@ -1,6 +1,7 @@
 #pragma once
 #include "../Math.hpp"
-#include "../geom/Ray.hpp"
+#include "Ray.hpp"
+#include "Geom.hpp"
 #include <vector>
 #include <boost/optional.hpp>
 
@@ -25,7 +26,7 @@ public:
         auto normal = getSurfaceNormalRay(ray);
         if (!normal)
             return {};
-        return Ray{normal->getOrigin(), reflect(normal->getDirection(), ray.getDirection())};
+        return Ray{normal->getOrigin(), geom::reflect(normal->getDirection(), ray.getDirection())};
     }
 
     boost::optional<Ray> getSurfaceNormalRay(Ray ray) const
@@ -41,11 +42,6 @@ public:
 private:
     Point origin;
     Float radius2;
-
-    static Vector reflect(Vector normal, Vector direction)
-    {
-        return direction - dot(normal, direction) * 2 * normal;
-    }
 
     boost::optional<Float> getDistance(Ray ray) const
     {
