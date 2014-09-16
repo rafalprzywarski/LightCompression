@@ -1,8 +1,10 @@
 #pragma once
-#include "Math.hpp"
+#include "../Math.hpp"
 #include <ostream>
 
 namespace lc
+{
+namespace geom
 {
 
 class Ray
@@ -21,4 +23,5 @@ inline std::ostream& operator<<(std::ostream& os, const Ray& r)
     return os << "( origin: (" << r.getOrigin() << ") direction: (" << r.getDirection() << ")";
 }
 
+}
 }

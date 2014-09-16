@@ -2,7 +2,7 @@
 #include <scene/Scene.hpp>
 #include <scene/Sphere.hpp>
 #include <Camera.hpp>
-#include <Lens.hpp>
+#include <geom/Lens.hpp>
 #include <Distribution.hpp>
 
 namespace lc
@@ -16,7 +16,7 @@ struct RaytraceTest : testing::Test
 TEST_F(RaytraceTest, should_trace_all_lights)
 {
     auto sensor = createCameraSensor({16, 8}, 1, directRayOnly);
-    ThinLens lens{0, 1000};
+    geom::ThinLens lens{0, 1000};
     auto camera = createCamera(sensor, lens);
     scene::Lights lights{{{{0, 0, 100}, 3}}, {{{6, 3, 200}, 4}}};
     auto img = scene::createScene(scene::Spheres<void>{}, lights).raytraceImage(camera);
@@ -33,7 +33,7 @@ TEST_F(RaytraceTest, should_trace_using_lens)
 {
     auto sensor = createCameraSensor({8, 8}, 1, directRayOnly);
     Float FOCAL_LENGTH = Float{8} / 3;
-    ThinLens lens{0, FOCAL_LENGTH};
+    geom::ThinLens lens{0, FOCAL_LENGTH};
     auto camera = createCamera(sensor, lens);
     scene::Lights lights{{{{0, 0, FOCAL_LENGTH + 5}, 3}}};
     auto img = createScene(scene::Spheres<void>{}, lights).raytraceImage(camera);
@@ -47,7 +47,7 @@ TEST_F(RaytraceTest, should_trace_using_lens)
 TEST_F(RaytraceTest, should_trace_reflective_spheres)
 {
     auto sensor = createCameraSensor({3, 1}, 1, directRayOnly);
-    ThinLens lens{0, 100000};
+    geom::ThinLens lens{0, 100000};
     auto camera = createCamera(sensor, lens);
     scene::Light light{{{5, 0, 3}, 1}};
     scene::Sphere<void> sphere{{{-1, 0, 4}, std::sqrt(Float(2))}};

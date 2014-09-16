@@ -2,7 +2,7 @@
 #include "scene/Scene.hpp"
 #include "scene/Sphere.hpp"
 #include "Camera.hpp"
-#include "Lens.hpp"
+#include "geom/Lens.hpp"
 #include "Distribution.hpp"
 #include "WritePng.hpp"
 
@@ -34,7 +34,7 @@ int main()
     auto scene = createScene(spheres, lights);
     lc::FixedDistribution distribution = circle(5, 12);
     auto sensor = lc::createCameraSensor({512, 256}, 0.0045, distribution);
-    lc::ThinLens lens{2, 1.9775};
+    lc::geom::ThinLens lens{2, 1.9775};
     auto camera = lc::createCamera(sensor, lens);
 
     auto image = scene.raytraceImage(camera);

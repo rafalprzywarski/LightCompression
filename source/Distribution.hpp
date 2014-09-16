@@ -9,7 +9,7 @@ struct DirectRayOnly
     template <typename Intensity>
     Float collect(Point origin, Intensity intensity) const
     {
-        return intensity(Ray{origin, {0, 0, 1}});
+        return intensity(geom::Ray{origin, {0, 0, 1}});
     }
 };
 
@@ -23,7 +23,7 @@ public:
     {
         Float s{};
         for (auto& d : directions)
-            s += intensity(Ray{origin, d});
+            s += intensity(geom::Ray{origin, d});
         return s / directions.size();
     }
 private:

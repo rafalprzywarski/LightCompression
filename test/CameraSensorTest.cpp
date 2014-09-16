@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <CameraSensor.hpp>
 #include <Distribution.hpp>
-#include "RayHelpers.hpp"
+#include "geom/RayHelpers.hpp"
 
 using namespace testing;
 
@@ -12,7 +12,7 @@ struct CameraSensorTest : testing::Test
 {
     struct MockIntensity
     {
-        MOCK_METHOD1(intensity, std::uint8_t(Ray ray));
+        MOCK_METHOD1(intensity, std::uint8_t(geom::Ray ray));
     };
     StrictMock<MockIntensity> mock;
     DirectRayOnly directRayOnly;
@@ -20,6 +20,7 @@ struct CameraSensorTest : testing::Test
 
 TEST_F(CameraSensorTest, should_evaluate_intensity_for_each_pixel)
 {
+    using geom::Ray;
     auto sensor = createCameraSensor({4, 3}, 1, directRayOnly);
     EXPECT_CALL(mock, intensity(_)).WillRepeatedly(Return(0));
     EXPECT_CALL(mock, intensity(RayEq(Ray{{-1.5, -1, 0}, {0, 0, 1}}))).WillOnce(Return(101));
@@ -40,6 +41,7 @@ TEST_F(CameraSensorTest, should_evaluate_intensity_for_each_pixel)
 
 TEST_F(CameraSensorTest, should_scale_pixel_size)
 {
+    using geom::Ray;
     auto sensor = createCameraSensor({3, 5}, 0.125, directRayOnly);
     EXPECT_CALL(mock, intensity(_)).WillRepeatedly(Return(0));
     EXPECT_CALL(mock, intensity(RayEq(Ray{{1 * 0.125, 2 * 0.125, 0}, {0, 0, 1}}))).WillOnce(Return(202));

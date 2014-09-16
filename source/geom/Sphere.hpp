@@ -1,6 +1,6 @@
 #pragma once
 #include "../Math.hpp"
-#include "../Ray.hpp"
+#include "../geom/Ray.hpp"
 #include <vector>
 #include <boost/optional.hpp>
 

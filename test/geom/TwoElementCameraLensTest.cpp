@@ -1,8 +1,10 @@
-#include <Lens.hpp>
+#include <geom/Lens.hpp>
 #include <gmock/gmock.h>
 #include "RayHelpers.hpp"
 
 namespace lc
+{
+namespace geom
 {
 
 struct TwoElementCameraLensTest : testing::Test
@@ -19,10 +21,11 @@ TEST_F(TwoElementCameraLensTest, should_rotate_and_scale_the_image)
     ThinLens FIRST_LENS{0, FIRST_FOCAL_LENGTH};
     ThinLens SECOND_LENS{FIRST_FOCAL_LENGTH + SECOND_FOCAL_LENGTH, SECOND_FOCAL_LENGTH};
     TwoElementCameraLens lens{FIRST_LENS, SECOND_LENS};
-    
+
     auto refracted = lens.refract(INCOMING);
     ASSERT_THAT(refracted, RayPassesThrough(INCOMING.getOrigin() * -SCALE, EPS));
     ASSERT_THAT(refracted, RayHasDirection(INCOMING.getDirection(), EPS));
 }
 
+}
 }

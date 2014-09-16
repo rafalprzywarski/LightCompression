@@ -22,7 +22,7 @@ private:
     Spheres spheres;
     Lights lights;
 
-    auto reflectRay(Ray ray)
+    auto reflectRay(LightRay ray)
     {
         if (!spheres.empty())
             if (auto r = spheres[0].reflect(ray))
@@ -30,7 +30,7 @@ private:
         return ray;
     }
 
-    auto doesHitAnyLight(const Ray& ray)
+    auto doesHitAnyLight(const LightRay& ray)
     {
         return std::find_if(
             begin(lights), end(lights),
@@ -38,7 +38,7 @@ private:
     }
 
 
-    Float raytraceIntensity(Ray ray)
+    Float raytraceIntensity(LightRay ray)
     {
         return doesHitAnyLight(reflectRay(ray)) ? 255 : 0;
     }

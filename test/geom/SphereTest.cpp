@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <geom/Sphere.hpp>
-#include "../RayHelpers.hpp"
+#include "RayHelpers.hpp"
 
 namespace lc
 {

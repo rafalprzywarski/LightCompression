@@ -1,5 +1,5 @@
 #pragma once
-#include "Ray.hpp"
+#include "geom/Ray.hpp"
 #include "Image.hpp"
 
 namespace lc

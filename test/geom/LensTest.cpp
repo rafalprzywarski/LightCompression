@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
-#include <Lens.hpp>
+#include <geom/Lens.hpp>
 #include "RayHelpers.hpp"
 
 namespace lc
+{
+namespace geom
 {
 
 struct LensTest : testing::Test
@@ -69,4 +71,5 @@ TEST_F(LensTest, rays_passing_though_the_focal_point_should_become_parallel)
     }
 }
 
+}
 }

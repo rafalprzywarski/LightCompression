@@ -1,8 +1,10 @@
 #pragma once
-#include "Math.hpp"
+#include "../Math.hpp"
 #include "Ray.hpp"
 
 namespace lc
+{
+namespace geom
 {
 
 class ThinLens
@@ -54,4 +56,5 @@ public:
     ThinLens second;
 };
 
+}
 }
