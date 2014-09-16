@@ -4,7 +4,7 @@ include_directories("../source")
 add_executable(lightcompressiontest
     main.cpp
     geom/SphereTest.cpp
-    RaytraceTest.cpp
+    scene/RaytraceTest.cpp
     CameraSensorTest.cpp
     geom/LensTest.cpp
     geom/TwoElementCameraLensTest.cpp
