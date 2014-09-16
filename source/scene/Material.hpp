@@ -6,12 +6,31 @@ namespace lc
 namespace scene
 {
 
-struct MirrorMaterial
+struct MirrorDistribution
 {
+    Vector getDirection(Vector incoming, Vector normal) const
+    {
+        return geom::reflect(normal, incoming);
+    }
+};
+
+template <typename DirectionDistribution>
+class BrdfMaterial
+{
+public:
+    BrdfMaterial(DirectionDistribution directions)
+        : directions(std::move(directions)) { }
     LightRay getReflectionRay(Vector incoming, geom::Ray normal) const
     {
-        return {normal.getOrigin(), geom::reflect(normal.getDirection(), incoming)};
+        return {normal.getOrigin(), directions.getDirection(incoming, normal.getDirection())};
     }
+private:
+    DirectionDistribution directions;
+};
+
+struct MirrorMaterial : BrdfMaterial<MirrorDistribution>
+{
+    MirrorMaterial() : BrdfMaterial({}) { }
 };
 
 }
