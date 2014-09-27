@@ -1,5 +1,7 @@
 #pragma once
 #include "../geom/Geom.hpp"
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_on_sphere.hpp>
 
 namespace lc
 {
@@ -31,6 +33,28 @@ private:
 struct MirrorMaterial : BrdfMaterial<MirrorDistribution>
 {
     MirrorMaterial() : BrdfMaterial({}) { }
+};
+
+struct UniformDirections
+{
+public:
+    Vector getDirection(Vector, Vector normal) const
+    {
+        Vector d = uos(rng);
+        return dot(d, normal) < 0 ? -d : d;
+    }
+private:
+
+    struct VectorWrapper : Vector
+    {
+        VectorWrapper(int) : Vector{} { }
+        auto begin() { return &(*this)[0]; }
+        auto end() { return begin() + 3; }
+        using iterator = Float *;
+    };
+
+    mutable boost::random::uniform_on_sphere<Float, VectorWrapper> uos{3};
+    mutable boost::random::mt19937 rng;
 };
 
 }

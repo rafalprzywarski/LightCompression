@@ -13,6 +13,23 @@ struct DirectRayOnly
     }
 };
 
+class RepeatedDirectRay
+{
+public:
+    RepeatedDirectRay(unsigned N) : N(N) {}
+    template <typename Intensity>
+    Float collect(Point origin, Intensity intensity) const
+    {
+        Float s{};
+        for (unsigned i = 0; i < N; ++i)
+            s += intensity(geom::Ray{origin, {0, 0, 1}});
+        return s / N;
+
+    }
+private:
+    int N;
+};
+
 class FixedDistribution
 {
 public:

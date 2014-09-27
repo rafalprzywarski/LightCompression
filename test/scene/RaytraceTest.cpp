@@ -5,6 +5,7 @@
 #include <Camera.hpp>
 #include <geom/Lens.hpp>
 #include <Distribution.hpp>
+#include <deque>
 
 namespace lc
 {
@@ -63,6 +64,19 @@ TEST_F(RaytraceTest, should_trace_reflective_spheres)
     EXPECT_EQ(0u, v(0, 0)) << "no reflection of light";
 }
 
+TEST_F(RaytraceTest, should_trace_brdf_materials)
+{
+    auto sensor = createCameraSensor({1, 1}, 1, RepeatedDirectRay{4096});
+    auto camera = createCamera(sensor, geom::NoLens{});
+    Light light{{{0, 0, -40}, 20}};
+    using Material = BrdfMaterial<UniformDirections>;
+    Material material({});
+    scene::Spheres<Material> spheres{{{{0, 0, 20}, 10}, material}};
+    auto img = createScene(spheres, {light}).raytraceImage(camera);
+    auto v = view(img);
+    EXPECT_LT(v(0, 0), 30u) << "diffuse light";
+    EXPECT_GT(v(0, 0), 20u) << "diffuse light";
+}
 
 }
 }

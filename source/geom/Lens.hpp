@@ -56,5 +56,14 @@ public:
     ThinLens second;
 };
 
+class NoLens
+{
+public:
+    Ray refract(Ray r) const
+    {
+        return r;
+    }
+};
+
 }
 }
