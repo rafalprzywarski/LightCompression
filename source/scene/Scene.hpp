@@ -32,11 +32,6 @@ private:
         return reflected;
     }
 
-    auto reflectRay(LightRay ray)
-    {
-        return getReflectedRay(ray).get_value_or(ray);
-    }
-
     auto doesHitAnyLight(const LightRay& ray)
     {
         boost::optional<Float> distance2;
@@ -50,7 +45,10 @@ private:
 
     Float raytraceIntensity(LightRay ray)
     {
-        return doesHitAnyLight(reflectRay(ray)) ? 255 : 0;
+        if (doesHitAnyLight(ray))
+            return 255;
+        auto r = getReflectedRay(ray);
+        return r && doesHitAnyLight(*r) ? 255 : 0;
     }
 };
 

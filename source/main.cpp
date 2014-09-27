@@ -35,7 +35,7 @@ int main()
     using Material = lc::scene::BrdfMaterial<lc::scene::UniformDirections>;
     Material material{{}};
     lc::scene::Spheres<Material> spheres = {
-        {{{31, 0, 180}, 5}, material},
+        {{{0, 0, 190}, 5}, material},
         {{{80, 0, 180}, 40}, material}};
     auto scene = createScene(spheres, lights);
     lc::FixedDistribution distribution = circle(5, 16, 16);
