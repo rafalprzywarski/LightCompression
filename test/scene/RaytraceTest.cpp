@@ -17,13 +17,13 @@ struct RaytraceTest : testing::Test
     using Spheres = Spheres<MirrorMaterial>;
     DirectRayOnly directRayOnly;
     MirrorMaterial mirror;
+    geom::NoLens noLens;
 };
 
 TEST_F(RaytraceTest, should_trace_all_lights)
 {
     auto sensor = createCameraSensor({16, 8}, 1, directRayOnly);
-    geom::ThinLens lens{0, 1000};
-    auto camera = createCamera(sensor, lens);
+    auto camera = createCamera(sensor, noLens);
     Lights lights{{{{0, 0, 100}, 3}}, {{{6, 3, 200}, 4}}};
     auto img = createScene(Spheres{}, lights).raytraceImage(camera);
     auto v = view(img);
@@ -53,8 +53,7 @@ TEST_F(RaytraceTest, should_trace_using_lens)
 TEST_F(RaytraceTest, should_trace_reflective_spheres)
 {
     auto sensor = createCameraSensor({3, 1}, 1, directRayOnly);
-    geom::ThinLens lens{0, 100000};
-    auto camera = createCamera(sensor, lens);
+    auto camera = createCamera(sensor, noLens);
     Light light{{{5, 0, 3}, 1}};
     Sphere<MirrorMaterial> sphere{{{-1, 0, 4}, std::sqrt(Float(2))}, mirror};
     auto img = createScene(Spheres{sphere}, {light}).raytraceImage(camera);
@@ -67,7 +66,7 @@ TEST_F(RaytraceTest, should_trace_reflective_spheres)
 TEST_F(RaytraceTest, should_trace_brdf_materials)
 {
     auto sensor = createCameraSensor({1, 1}, 1, RepeatedDirectRay{4096});
-    auto camera = createCamera(sensor, geom::NoLens{});
+    auto camera = createCamera(sensor, noLens);
     Light light{{{0, 0, -40}, 20}};
     using Material = BrdfMaterial<UniformDirections>;
     Material material({});
