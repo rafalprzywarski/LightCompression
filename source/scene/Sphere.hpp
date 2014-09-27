@@ -12,7 +12,7 @@ class Sphere
 public:
     Sphere(geom::Sphere sphere, Material material)
         : sphere(sphere), material(material) { }
-    boost::optional<LightRay> reflect(LightRay ray) const
+    Opt<LightRay> reflect(LightRay ray) const
     {
         auto normal = sphere.getSurfaceNormalRay(ray);
         if (!normal)

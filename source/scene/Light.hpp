@@ -11,7 +11,7 @@ class Light
 {
 public:
     Light(geom::Sphere sphere) : sphere(sphere) { }
-    auto isHitBy(LightRay ray, boost::optional<Float> distance2) const
+    auto isHitBy(LightRay ray, OptFloat distance2) const
     {
         return
             sphere.intersects(ray) &&

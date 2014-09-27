@@ -23,5 +23,7 @@ inline std::ostream& operator<<(std::ostream& os, const Ray& r)
     return os << "( origin: (" << r.getOrigin() << ") direction: (" << r.getDirection() << ")";
 }
 
+using OptRay = Opt<Ray>;
+
 }
 }

@@ -3,7 +3,6 @@
 #include "Ray.hpp"
 #include "Geom.hpp"
 #include <vector>
-#include <boost/optional.hpp>
 
 namespace lc
 {
@@ -21,7 +20,7 @@ public:
         return distance && *distance >= 0;
     }
 
-    boost::optional<Ray> getSurfaceNormalRay(Ray ray) const
+    OptRay getSurfaceNormalRay(Ray ray) const
     {
         auto distance = getDistance(ray);
         if (!distance || *distance < 0)
@@ -35,7 +34,7 @@ private:
     Point origin;
     Float radius2;
 
-    boost::optional<Float> getDistance(Ray ray) const
+    OptFloat getDistance(Ray ray) const
     {
         auto oc = ray.getOrigin() - origin;
         auto b = dot(ray.getDirection(), oc);
