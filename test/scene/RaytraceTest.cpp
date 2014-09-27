@@ -122,5 +122,14 @@ TEST_F(RaytraceTest, light_sources_should_obstruct_objects)
     EXPECT_EQ(255u, traceCentralRay(spheres, light));
 }
 
+TEST_F(RaytraceTest, objects_should_be_lit_indirectly)
+{
+    Light light{{{3, 0, 8}, 1}};
+    Spheres spheres{
+        {{{-1, 0, 4}, std::sqrt(Float(2))}, mirror},
+        {{{4, 0, 2}, std::sqrt(Float(2))}, mirror}};
+    EXPECT_EQ(255u, traceCentralRay(spheres, light));
+}
+
 }
 }

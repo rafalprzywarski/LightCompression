@@ -32,11 +32,21 @@ private:
         return reflected;
     }
 
-    auto doesHitAnyLight(const LightRay& ray)
+    struct LightRayWithDistance2
     {
-        OptFloat distance2;
+        LightRay ray;
+        Float distance2;
+    };
+
+    Opt<LightRayWithDistance2> getReflectedRayWithDistance2(LightRay ray)
+    {
         if (auto r = getReflectedRay(ray))
-            distance2 = (ray.getOrigin() - r->getOrigin()).length_squared();
+            return LightRayWithDistance2{*r, (ray.getOrigin() - r->getOrigin()).length_squared()};
+        return {};
+    }
+
+    auto doesHitAnyLightWithin(const LightRay& ray, const OptFloat& distance2)
+    {
         return std::find_if(
             begin(lights), end(lights),
             [=](auto& s) { return s.isHitBy(ray, distance2); }) != lights.end();
@@ -45,10 +55,15 @@ private:
 
     Float raytraceIntensity(LightRay ray)
     {
-        if (doesHitAnyLight(ray))
-            return 255;
-        auto r = getReflectedRay(ray);
-        return r && doesHitAnyLight(*r) ? 255 : 0;
+        while (true)
+        {
+            Opt<LightRayWithDistance2> rd = getReflectedRayWithDistance2(ray);
+            if (doesHitAnyLightWithin(ray, getOpt(rd, &LightRayWithDistance2::distance2)))
+                return 255;
+            if (!rd)
+                return 0;
+            ray = rd->ray;
+        }
     }
 };
 
