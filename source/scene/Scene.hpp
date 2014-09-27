@@ -22,21 +22,29 @@ private:
     Spheres spheres;
     Lights lights;
 
-    auto reflectRay(LightRay ray)
+    boost::optional<LightRay> getReflectedRay(LightRay ray)
     {
         boost::optional<LightRay> reflected;
         for (auto& s : spheres)
             if (auto r = s.reflect(ray))
                 if (!reflected || reflected->getOrigin()[2] > r->getOrigin()[2])
                     reflected = *r;
-        return reflected.get_value_or(ray);
+        return reflected;
+    }
+
+    auto reflectRay(LightRay ray)
+    {
+        return getReflectedRay(ray).get_value_or(ray);
     }
 
     auto doesHitAnyLight(const LightRay& ray)
     {
+        boost::optional<Float> distance2;
+        if (auto r = getReflectedRay(ray))
+            distance2 = (ray.getOrigin() - r->getOrigin()).length_squared();
         return std::find_if(
             begin(lights), end(lights),
-            [=](auto& s) { return s.isHitBy(ray); }) != lights.end();
+            [=](auto& s) { return s.isHitBy(ray, distance2); }) != lights.end();
     }
 
 

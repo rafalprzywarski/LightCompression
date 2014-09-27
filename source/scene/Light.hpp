@@ -11,7 +11,13 @@ class Light
 {
 public:
     Light(geom::Sphere sphere) : sphere(sphere) { }
-    auto isHitBy(LightRay ray) const { return sphere.intersects(ray); }
+    auto isHitBy(LightRay ray, boost::optional<Float> distance2) const
+    {
+        return
+            sphere.intersects(ray) &&
+            (!distance2 ||
+                (ray.getOrigin() - sphere.getSurfaceNormalRay(ray)->getOrigin()).length_squared() <
+                    distance2); }
 private:
     geom::Sphere sphere;
 };

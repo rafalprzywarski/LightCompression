@@ -27,8 +27,8 @@ int main()
 {
     lc::scene::Lights lights = {
         //{{{-30, 0, 100}, 15}},
-        {{{-15, 0, 140}, 15}},
-        {{{  0, 0, 180}, 15}},
+        //{{{-15, 0, 140}, 15}},
+        {{{  0, 0, 180}, 10}},
         //{{{ 15, 0, 220}, 15}},
         //{{{ 30, 0, 260}, 15}},
     };
@@ -38,7 +38,7 @@ int main()
         {{{31, 0, 180}, 5}, material},
         {{{80, 0, 180}, 40}, material}};
     auto scene = createScene(spheres, lights);
-    lc::FixedDistribution distribution = circle(5, 32, 32);
+    lc::FixedDistribution distribution = circle(5, 16, 16);
     auto sensor = lc::createCameraSensor({256, 128}, 0.005, distribution);
     lc::geom::ThinLens lens{2, 1.9775};
     auto camera = lc::createCamera(sensor, lens);
