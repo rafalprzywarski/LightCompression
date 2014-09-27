@@ -34,9 +34,11 @@ int main()
     };
     using Material = lc::scene::BrdfMaterial<lc::scene::UniformDirections>;
     Material material{{}};
-    lc::scene::Spheres<Material> spheres = {{{{31, 0, 180}, 15}, material}};
+    lc::scene::Spheres<Material> spheres = {
+        {{{31, 0, 180}, 5}, material},
+        {{{80, 0, 180}, 40}, material}};
     auto scene = createScene(spheres, lights);
-    lc::FixedDistribution distribution = circle(0.05, 2, 16);
+    lc::FixedDistribution distribution = circle(5, 32, 32);
     auto sensor = lc::createCameraSensor({256, 128}, 0.005, distribution);
     lc::geom::ThinLens lens{2, 1.9775};
     auto camera = lc::createCamera(sensor, lens);

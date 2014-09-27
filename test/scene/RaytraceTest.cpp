@@ -18,6 +18,15 @@ struct RaytraceTest : testing::Test
     DirectRayOnly directRayOnly;
     MirrorMaterial mirror;
     geom::NoLens noLens;
+
+    template <typename Spheres>
+    Float traceCentralRay(Spheres spheres, Light light)
+    {
+        auto sensor = createCameraSensor({1, 1}, 1, directRayOnly);
+        auto camera = createCamera(sensor, noLens);
+        auto img = createScene(spheres, {light}).raytraceImage(camera);
+        return view(img)(0, 0);
+    }
 };
 
 TEST_F(RaytraceTest, should_trace_all_lights)
@@ -75,6 +84,26 @@ TEST_F(RaytraceTest, should_trace_brdf_materials)
     auto v = view(img);
     EXPECT_LT(v(0, 0), 30u) << "diffuse light";
     EXPECT_GT(v(0, 0), 20u) << "diffuse light";
+}
+
+TEST_F(RaytraceTest, should_trace_the_nearest_sphere)
+{
+    Light light{{{0, 0, 5}, 1}};
+    Spheres spheres{
+        {{{0, 0, 2}, 1}, mirror},
+        {{{0, 0, 8}, 1}, mirror},
+        {{{0, 0, 11}, 1}, mirror},
+        {{{10, 10, -100}, 1}, mirror}};
+
+    EXPECT_EQ(0u, traceCentralRay(spheres, light));
+
+    std::swap(spheres[0], spheres[1]);
+
+    EXPECT_EQ(0u, traceCentralRay(spheres, light));
+
+    std::swap(spheres[1], spheres[2]);
+
+    EXPECT_EQ(0u, traceCentralRay(spheres, light));
 }
 
 }

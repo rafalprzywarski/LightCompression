@@ -24,10 +24,12 @@ private:
 
     auto reflectRay(LightRay ray)
     {
-        if (!spheres.empty())
-            if (auto r = spheres[0].reflect(ray))
-                return *r;
-        return ray;
+        boost::optional<LightRay> reflected;
+        for (auto& s : spheres)
+            if (auto r = s.reflect(ray))
+                if (!reflected || reflected->getOrigin()[2] > r->getOrigin()[2])
+                    reflected = *r;
+        return reflected.get_value_or(ray);
     }
 
     auto doesHitAnyLight(const LightRay& ray)
