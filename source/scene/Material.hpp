@@ -25,11 +25,11 @@ struct MirrorDistribution
     }
 };
 
-template <typename DirectionDistribution, typename Brdf = ConstantBrdf>
+template <typename DirectionDistribution, typename Brdf>
 class BrdfMaterial
 {
 public:
-    BrdfMaterial(DirectionDistribution directions, Brdf brdf = {1})
+    BrdfMaterial(DirectionDistribution directions, Brdf brdf)
         : directions(std::move(directions)), brdf(std::move(brdf)) { }
     LightRay getReflectionRay(Vector incoming, geom::Ray normal) const
     {

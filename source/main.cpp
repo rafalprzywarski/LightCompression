@@ -32,8 +32,8 @@ int main()
         //{{{ 15, 0, 220}, 15}},
         //{{{ 30, 0, 260}, 15}},
     };
-    using Material = lc::scene::BrdfMaterial<lc::scene::UniformDirections>;
-    Material material{{}};
+    using Material = lc::scene::BrdfMaterial<lc::scene::UniformDirections, lc::scene::ConstantBrdf>;
+    Material material{{}, {1}};
     lc::scene::Spheres<Material> spheres = {
         {{{-10, 0, 180}, 5}, material},
         {{{40, 0, 200}, 40}, material}};

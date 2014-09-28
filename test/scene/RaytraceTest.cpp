@@ -77,8 +77,8 @@ TEST_F(RaytraceTest, should_trace_brdf_materials)
     auto sensor = createCameraSensor({1, 1}, 1, RepeatedDirectRay{4096});
     auto camera = createCamera(sensor, noLens);
     Light light{{{0, 0, -40}, 20}, 255};
-    using Material = BrdfMaterial<UniformDirections>;
-    Material material({});
+    using Material = BrdfMaterial<UniformDirections, ConstantBrdf>;
+    Material material{{}, {1}};
     scene::Spheres<Material> spheres{{{{0, 0, 20}, 10}, material}};
     auto img = createScene(spheres, {light}).raytraceImage(camera);
     auto v = view(img);
