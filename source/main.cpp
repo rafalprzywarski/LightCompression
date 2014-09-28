@@ -28,18 +28,18 @@ int main()
     lc::scene::Lights lights = {
         //{{{-30, 0, 100}, 15}},
         //{{{-15, 0, 140}, 15}},
-        {{{  -80, 0, 180}, 10}, 255},
+        {{{  -80, 0, 200}, 10}, 12000},
         //{{{ 15, 0, 220}, 15}},
         //{{{ 30, 0, 260}, 15}},
     };
     using Material = lc::scene::BrdfMaterial<lc::scene::UniformDirections>;
     Material material{{}};
     lc::scene::Spheres<Material> spheres = {
-        {{{-10, 0, 170}, 5}, material},
-        {{{40, 0, 180}, 40}, material}};
+        {{{-10, 0, 180}, 5}, material},
+        {{{40, 0, 200}, 40}, material}};
     auto scene = createScene(spheres, lights);
-    lc::FixedDistribution distribution = circle(5, 16, 128);
-    auto sensor = lc::createCameraSensor({256, 128}, 0.005, distribution);
+    lc::FixedDistribution distribution = circle(5, 32, 64);
+    auto sensor = lc::createCameraSensor({512, 256}, 0.00125, distribution);
     lc::geom::ThinLens lens{2, 1.9775};
     auto camera = lc::createCamera(sensor, lens);
 
