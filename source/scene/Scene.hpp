@@ -60,7 +60,7 @@ private:
         {
             Opt<LightRayWithDistance2> rd = getReflectedRayWithDistance2(ray);
             if (auto i = getLightIntensityWithin(ray, getOpt(rd, &LightRayWithDistance2::distance2)))
-                return *i;
+                return *i * ray.getIntensity();
             if (!rd)
                 return 0;
             ray = rd->ray;

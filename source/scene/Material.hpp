@@ -8,6 +8,15 @@ namespace lc
 namespace scene
 {
 
+class ConstantBrdf
+{
+public:
+    ConstantBrdf(Float transfer) : transfer(transfer) { }
+    Float getTransfer() const { return transfer; }
+private:
+    Float transfer;
+};
+
 struct MirrorDistribution
 {
     Vector getDirection(Vector incoming, Vector normal) const
@@ -16,23 +25,24 @@ struct MirrorDistribution
     }
 };
 
-template <typename DirectionDistribution>
+template <typename DirectionDistribution, typename Brdf = ConstantBrdf>
 class BrdfMaterial
 {
 public:
-    BrdfMaterial(DirectionDistribution directions)
-        : directions(std::move(directions)) { }
+    BrdfMaterial(DirectionDistribution directions, Brdf brdf = {1})
+        : directions(std::move(directions)), brdf(std::move(brdf)) { }
     LightRay getReflectionRay(Vector incoming, geom::Ray normal) const
     {
-        return {normal.getOrigin(), directions.getDirection(incoming, normal.getDirection())};
+        return {{normal.getOrigin(), directions.getDirection(incoming, normal.getDirection())}, brdf.getTransfer()};
     }
 private:
     DirectionDistribution directions;
+    Brdf brdf;
 };
 
-struct MirrorMaterial : BrdfMaterial<MirrorDistribution>
+struct MirrorMaterial : BrdfMaterial<MirrorDistribution, ConstantBrdf>
 {
-    MirrorMaterial() : BrdfMaterial({}) { }
+    MirrorMaterial(Float reflectivity = 1) : BrdfMaterial({}, {reflectivity}) { }
 };
 
 struct UniformDirections

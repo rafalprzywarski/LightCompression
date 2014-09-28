@@ -138,5 +138,12 @@ TEST_F(RaytraceTest, lights_should_have_custom_intensity)
     EXPECT_EQ(37, traceCentralRay(spheres, light));
 }
 
+TEST_F(RaytraceTest, materials_should_decrease_the_amount_of_reflected_light)
+{
+    Light light{{{5, 0, 3}, 1}, 8};
+    Spheres spheres{{{{-1, 0, 4}, std::sqrt(Float(2))}, MirrorMaterial{0.625}}};
+    EXPECT_EQ(8 * 0.625, traceCentralRay(spheres, light));
+}
+
 }
 }
