@@ -10,7 +10,7 @@ namespace scene
 class Light
 {
 public:
-    Light(geom::Sphere sphere, Float intensity = 255)
+    Light(geom::Sphere sphere, Float intensity)
     : sphere(sphere), intensity(intensity) { }
     OptFloat getIntensity(LightRay ray, OptFloat distance2) const
     {
