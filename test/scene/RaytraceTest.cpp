@@ -145,5 +145,14 @@ TEST_F(RaytraceTest, materials_should_decrease_the_amount_of_reflected_light)
     EXPECT_EQ(8 * 0.625, traceCentralRay(spheres, light));
 }
 
+TEST_F(RaytraceTest, each_bounce_should_decrease_the_amount_of_reflected_light)
+{
+    Light light{{{3, 0, 8}, 1}, 16};
+    Spheres spheres{
+        {{{-1, 0, 4}, std::sqrt(Float(2))}, MirrorMaterial{0.75}},
+        {{{4, 0, 2}, std::sqrt(Float(2))}, MirrorMaterial{0.5}}};
+    EXPECT_EQ(16 * 0.75 * 0.5, traceCentralRay(spheres, light));
+}
+
 }
 }

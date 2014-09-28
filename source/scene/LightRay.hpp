@@ -13,6 +13,7 @@ public:
     LightRay(const Ray& ray, Float intensity = 1)
     : geom::Ray(ray), intensity(intensity) {}
     Float getIntensity() const { return intensity; }
+    LightRay getTransfered(Float factory) { return {*this, this->intensity * factory}; }
 private:
     Float intensity;
 };

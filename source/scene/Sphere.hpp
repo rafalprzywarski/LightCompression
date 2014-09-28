@@ -17,7 +17,7 @@ public:
         auto normal = sphere.getSurfaceNormalRay(ray);
         if (!normal)
             return {};
-        return material.getReflectionRay(ray.getDirection(), *normal);
+        return material.getReflectionRay(ray.getDirection(), *normal).getTransfered(ray.getIntensity());
     }
 private:
     geom::Sphere sphere;
