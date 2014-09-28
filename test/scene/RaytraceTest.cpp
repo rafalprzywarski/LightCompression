@@ -131,5 +131,12 @@ TEST_F(RaytraceTest, objects_should_be_lit_indirectly)
     EXPECT_EQ(255u, traceCentralRay(spheres, light));
 }
 
+TEST_F(RaytraceTest, lights_should_have_custom_intensity)
+{
+    Light light{{{5, 0, 3}, 1}, 37};
+    Spheres spheres{{{{-1, 0, 4}, std::sqrt(Float(2))}, mirror}};
+    EXPECT_EQ(37, traceCentralRay(spheres, light));
+}
+
 }
 }
