@@ -11,13 +11,14 @@ class Light
 {
 public:
     Light(geom::Sphere sphere) : sphere(sphere) { }
-    auto isHitBy(LightRay ray, OptFloat distance2) const
+    OptFloat getIntensity(LightRay ray, OptFloat distance2) const
     {
-        return
-            sphere.intersects(ray) &&
-            (!distance2 ||
-                (ray.getOrigin() - sphere.getSurfaceNormalRay(ray)->getOrigin()).length_squared() <
-                    distance2); }
+        if (!sphere.intersects(ray) ||
+            (distance2 &&
+                (ray.getOrigin() - sphere.getSurfaceNormalRay(ray)->getOrigin()).length_squared() >
+                    distance2)) return {};
+        return 255;
+    }
 private:
     geom::Sphere sphere;
 };

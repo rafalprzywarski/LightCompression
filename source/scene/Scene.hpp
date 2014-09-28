@@ -45,11 +45,12 @@ private:
         return {};
     }
 
-    auto doesHitAnyLightWithin(const LightRay& ray, const OptFloat& distance2)
+    OptFloat getLightIntensityWithin(const LightRay& ray, const OptFloat& distance2)
     {
-        return std::find_if(
-            begin(lights), end(lights),
-            [=](auto& s) { return s.isHitBy(ray, distance2); }) != lights.end();
+        for (auto& l : lights)
+            if (auto i = l.getIntensity(ray, distance2))
+                return i;
+        return {};
     }
 
 
@@ -58,8 +59,8 @@ private:
         while (true)
         {
             Opt<LightRayWithDistance2> rd = getReflectedRayWithDistance2(ray);
-            if (doesHitAnyLightWithin(ray, getOpt(rd, &LightRayWithDistance2::distance2)))
-                return 255;
+            if (auto i = getLightIntensityWithin(ray, getOpt(rd, &LightRayWithDistance2::distance2)))
+                return *i;
             if (!rd)
                 return 0;
             ray = rd->ray;
