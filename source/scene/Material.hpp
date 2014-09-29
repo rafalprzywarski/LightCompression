@@ -12,9 +12,26 @@ class ConstantBrdf
 {
 public:
     ConstantBrdf(Float transfer) : transfer(transfer) { }
-    Float getTransfer() const { return transfer; }
+    Float getTransfer(Vector, Vector, Vector) const { return transfer; }
 private:
     Float transfer;
+};
+
+class StretchedPhongBrdf
+{
+public:
+    StretchedPhongBrdf(Float n) : n(n) { }
+    Float getTransfer(Vector incoming, Vector normal, Vector outgoing) const
+    {
+        auto PI = Float(3.14159265359);
+        auto cn = (n + 2) / PI;
+        auto NL = -dot(normal, incoming);
+        auto NV = dot(normal, outgoing);
+        auto LV = -dot(incoming, outgoing);
+        return cn * std::pow(std::max((2 * NL * NV - LV), Float(0)), n) / std::max(NL, NV);
+    }
+private:
+    Float n;
 };
 
 struct MirrorDistribution
@@ -33,7 +50,8 @@ public:
         : directions(std::move(directions)), brdf(std::move(brdf)) { }
     LightRay getReflectionRay(Vector incoming, geom::Ray normal) const
     {
-        return {{normal.getOrigin(), directions.getDirection(incoming, normal.getDirection())}, brdf.getTransfer()};
+        auto outgoing = directions.getDirection(incoming, normal.getDirection());
+        return {{normal.getOrigin(), outgoing}, brdf.getTransfer(incoming, normal.getDirection(), outgoing)};
     }
 private:
     DirectionDistribution directions;

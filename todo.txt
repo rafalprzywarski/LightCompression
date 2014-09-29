@@ -1,2 +1,3 @@
+* remove state (random number generator) from scene
 * shading and shadows
 * generate holograms

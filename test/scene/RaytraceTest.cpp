@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include <scene/Scene.hpp>
 #include <scene/Sphere.hpp>
 #include <scene/Material.hpp>
@@ -6,6 +6,8 @@
 #include <geom/Lens.hpp>
 #include <Distribution.hpp>
 #include <deque>
+
+using namespace testing;
 
 namespace lc
 {
@@ -26,6 +28,18 @@ struct RaytraceTest : testing::Test
         auto camera = createCamera(sensor, noLens);
         auto img = createScene(spheres, {light}).raytraceImage(camera);
         return view(img)(0, 0);
+    }
+
+    template <typename Spheres>
+    std::vector<Float> traceHorizontalRays(unsigned N, Spheres spheres, Light light)
+    {
+        auto sensor = createCameraSensor({N, 1}, 1, directRayOnly);
+        auto camera = createCamera(sensor, noLens);
+        auto img = createScene(spheres, {light}).raytraceImage(camera);
+        std::vector<Float> samples;
+        for (unsigned i = 0; i < N; ++i)
+            samples.push_back(view(img)(i, 0));
+        return samples;
     }
 };
 
@@ -159,6 +173,14 @@ TEST_F(RaytraceTest, each_bounce_should_decrease_the_amount_of_reflected_light)
         {{{-1, 0, 4}, std::sqrt(Float(2))}, MirrorMaterial{0.75}},
         {{{4, 0, 2}, std::sqrt(Float(2))}, MirrorMaterial{0.5}}};
     EXPECT_EQ(16 * 0.75 * 0.5, traceCentralRay(spheres, light));
+}
+
+TEST_F(RaytraceTest, should_use_stretched_phong_model)
+{
+    Light light{{{0, 0, -105}, 100}, 2};
+    using Spheres = scene::Spheres<BrdfMaterial<MirrorDistribution, StretchedPhongBrdf>>;
+    Spheres spheres{{{{0, 0, 5}, 4}, {{}, {100}}}};
+    ASSERT_THAT(traceHorizontalRays(3, spheres, light), ElementsAre(67, 64, 67));
 }
 
 }
