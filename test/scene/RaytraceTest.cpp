@@ -138,6 +138,13 @@ TEST_F(RaytraceTest, lights_should_have_custom_intensity)
     EXPECT_EQ(37, traceCentralRay(spheres, light));
 }
 
+TEST_F(RaytraceTest, should_saturate_light_intensity)
+{
+    Light light{{{5, 0, 3}, 1}, 1000};
+    Spheres spheres{{{{-1, 0, 4}, std::sqrt(Float(2))}, mirror}};
+    EXPECT_EQ(255, traceCentralRay(spheres, light));
+}
+
 TEST_F(RaytraceTest, materials_should_decrease_the_amount_of_reflected_light)
 {
     Light light{{{5, 0, 3}, 1}, 8};

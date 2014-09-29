@@ -21,7 +21,7 @@ public:
     {
         Image image{size.width, size.height};
         auto v = view(image);
-        forEachPixel([&](auto x, auto y) { v(x, y) = distribution.collect(pointAt(x, y), intensity); });
+        forEachPixel([&](auto x, auto y) { v(x, y) = saturate(distribution.collect(pointAt(x, y), intensity)); });
         return image;
     }
 
@@ -29,6 +29,11 @@ private:
     SensorSize size;
     Float pixelSize;
     Distribution distribution;
+
+    static auto saturate(Float v)
+    {
+        return std::min(v, Float(255));
+    }
 
     Point pointAt(unsigned x, unsigned y) const
     {
