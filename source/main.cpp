@@ -41,7 +41,7 @@ int main()
         {{{-20, 10, 260}, 5}, Material{{}, {20}}},
         {{{40, 0, 200}, 40}, Material{{}, {4}}}};
     auto scene = createScene(spheres, lights);
-    lc::FixedDistribution distribution = circle(0.05, 2, 8192 * 8);
+    lc::FixedDistribution distribution = circle(0.05, 2, 8192 * 4);
     auto sensor = lc::createCameraSensor({1024, 512}, 0.000625, distribution);
     lc::geom::ThinLens lens{2, 1.9775};
     auto camera = lc::createCamera(sensor, lens);

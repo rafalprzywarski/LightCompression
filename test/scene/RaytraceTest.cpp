@@ -100,7 +100,7 @@ TEST_F(RaytraceTest, should_trace_brdf_materials)
     EXPECT_GT(v(0, 0), 20u) << "diffuse light";
 }
 
-TEST_F(RaytraceTest, should_trace_the_nearest_sphere)
+TEST_F(RaytraceTest, should_trace_the_nearest_sphere_in_z_direction)
 {
     Light light{{{0, 0, 5}, 1}, 255};
     Spheres spheres{
@@ -116,6 +116,26 @@ TEST_F(RaytraceTest, should_trace_the_nearest_sphere)
     EXPECT_EQ(0u, traceCentralRay(spheres, light));
 
     std::swap(spheres[1], spheres[2]);
+
+    EXPECT_EQ(0u, traceCentralRay(spheres, light));
+}
+
+TEST_F(RaytraceTest, should_trace_the_nearest_sphere_in_x_direction)
+{
+    Light light{{{5, 0, 3}, 1}, 255};
+    Spheres spheres{
+        {{{-1, 0, 4}, std::sqrt(Float(2))}, mirror},
+        {{{3, 0, 3}, 1}, mirror},
+        {{{8, 0, 3}, 1}, mirror},
+        {{{11, 0, 3}, 1}, mirror}};
+
+    EXPECT_EQ(0u, traceCentralRay(spheres, light));
+
+    std::swap(spheres[1], spheres[2]);
+
+    EXPECT_EQ(0u, traceCentralRay(spheres, light));
+
+    std::swap(spheres[2], spheres[3]);
 
     EXPECT_EQ(0u, traceCentralRay(spheres, light));
 }

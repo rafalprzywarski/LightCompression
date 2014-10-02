@@ -27,7 +27,9 @@ private:
         Opt<LightRay> reflected;
         for (auto& s : spheres)
             if (auto r = s.reflect(ray))
-                if (!reflected || reflected->getOrigin()[2] > r->getOrigin()[2])
+                if (!reflected ||
+                    (ray.getOrigin() - reflected->getOrigin()).length_squared() >
+                    (ray.getOrigin() - r->getOrigin()).length_squared())
                     reflected = *r;
         return reflected;
     }
