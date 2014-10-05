@@ -23,7 +23,7 @@ lc::FixedDistribution circle(lc::Float radius, unsigned N, unsigned S)
     return dirs;
 }
 
-int main()
+auto createScene()
 {
     lc::scene::Lights lights = {
         //{{{-30, 0, 100}, 15}},
@@ -33,20 +33,29 @@ int main()
         //{{{ 30, 0, 260}, 15}},
     };
     using Material = lc::scene::BrdfMaterial<lc::scene::UniformDirections, lc::scene::StretchedPhongBrdf>;
-    lc::scene::UniformDirections uniform;
+    static lc::scene::UniformDirections uniform;
     lc::scene::Spheres<Material> spheres = {
         {{{-10, 0, 180}, 5}, Material{uniform, {40}}},
         {{{0, 10, 220}, 5}, Material{uniform, {20}}},
         {{{-10, 10, 240}, 5}, Material{uniform, {20}}},
         {{{-20, 10, 260}, 5}, Material{uniform, {20}}},
         {{{40, 0, 200}, 40}, Material{uniform, {4}}}};
-    auto scene = createScene(spheres, lights);
+    return createScene(spheres, lights);
+}
 
+auto createCamera()
+{
     lc::FixedDistribution distribution = circle(0.05, 2, 128);
     auto sensor = lc::createCameraSensor({1024, 512}, 0.000625, distribution);
     lc::geom::ThinLens lens{2, 1.9775};
-    auto camera = lc::createCamera(sensor, lens);
+    return lc::createCamera(sensor, lens);
+}
 
+int main()
+{
+    auto scene = createScene();
+    auto camera = createCamera();
     auto image = scene.raytraceImage(camera);
+
     lc::writePng(image, "scene.png");
 }
