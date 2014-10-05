@@ -46,7 +46,7 @@ auto createScene()
 auto createCamera()
 {
     lc::FixedDistribution distribution = circle(0.05, 2, 128);
-    auto sensor = lc::createCameraSensor({1024, 512}, 0.000625, distribution);
+    auto sensor = lc::createCameraSensor({1024, 512}, {0, 0}, 0.000625, distribution);
     lc::geom::ThinLens lens{2, 1.9775};
     return lc::createCamera(sensor, lens);
 }

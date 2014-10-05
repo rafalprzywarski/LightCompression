@@ -25,7 +25,7 @@ struct RaytraceTest : testing::Test
     template <typename Spheres>
     Float traceCentralRay(Spheres spheres, Light light)
     {
-        auto sensor = createCameraSensor({1, 1}, 1, directRayOnly);
+        auto sensor = createCameraSensor({1, 1}, {0, 0}, 1, directRayOnly);
         auto camera = createCamera(sensor, noLens);
         auto img = createScene(spheres, {light}).raytraceImage(camera);
         return view(img)(0, 0);
@@ -34,7 +34,7 @@ struct RaytraceTest : testing::Test
     template <typename Spheres>
     std::vector<Float> traceHorizontalRays(unsigned N, Spheres spheres, Light light)
     {
-        auto sensor = createCameraSensor({N, 1}, 1, directRayOnly);
+        auto sensor = createCameraSensor({N, 1}, {0, 0}, 1, directRayOnly);
         auto camera = createCamera(sensor, noLens);
         auto img = createScene(spheres, {light}).raytraceImage(camera);
         std::vector<Float> samples;
@@ -51,7 +51,7 @@ struct RaytraceTest : testing::Test
 
 TEST_F(RaytraceTest, should_trace_all_lights)
 {
-    auto sensor = createCameraSensor({16, 8}, 1, directRayOnly);
+    auto sensor = createCameraSensor({16, 8}, {0, 0}, 1, directRayOnly);
     auto camera = createCamera(sensor, noLens);
     Lights lights{{{{0, 0, 100}, 3}, 255}, {{{6, 3, 200}, 4}, 255}};
     auto img = createScene(Spheres{}, lights).raytraceImage(camera);
@@ -66,7 +66,7 @@ TEST_F(RaytraceTest, should_trace_all_lights)
 
 TEST_F(RaytraceTest, should_trace_using_lens)
 {
-    auto sensor = createCameraSensor({8, 8}, 1, directRayOnly);
+    auto sensor = createCameraSensor({8, 8}, {0, 0}, 1, directRayOnly);
     Float FOCAL_LENGTH = Float{8} / 3;
     geom::ThinLens lens{0, FOCAL_LENGTH};
     auto camera = createCamera(sensor, lens);
@@ -81,7 +81,7 @@ TEST_F(RaytraceTest, should_trace_using_lens)
 
 TEST_F(RaytraceTest, should_trace_reflective_spheres)
 {
-    auto sensor = createCameraSensor({3, 1}, 1, directRayOnly);
+    auto sensor = createCameraSensor({3, 1}, {0, 0}, 1, directRayOnly);
     auto camera = createCamera(sensor, noLens);
     Light light{{{5, 0, 3}, 1}, 255};
     Sphere<MirrorMaterial> sphere{{{-1, 0, 4}, std::sqrt(Float(2))}, mirror};
@@ -94,7 +94,7 @@ TEST_F(RaytraceTest, should_trace_reflective_spheres)
 
 TEST_F(RaytraceTest, should_trace_brdf_materials)
 {
-    auto sensor = createCameraSensor({1, 1}, 1, RepeatedDirectRay{4096});
+    auto sensor = createCameraSensor({1, 1}, {0, 0}, 1, RepeatedDirectRay{4096});
     auto camera = createCamera(sensor, noLens);
     Light light{{{0, 0, -40}, 20}, 255};
     using Material = BrdfMaterial<UniformDirections, ConstantBrdf>;

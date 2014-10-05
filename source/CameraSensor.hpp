@@ -10,12 +10,17 @@ struct SensorSize
     unsigned width, height;
 };
 
+struct SensorOffset
+{
+    int x, y;
+};
+
 template <typename Distribution>
 class CameraSensor
 {
 public:
-    CameraSensor(SensorSize size, Float pixelSize, Distribution distribution)
-        : size(size), pixelSize(pixelSize), distribution(distribution) { }
+    CameraSensor(SensorSize size, SensorOffset offset, Float pixelSize, Distribution distribution)
+        : size(size), offset(offset), pixelSize(pixelSize), distribution(distribution) { }
     template <typename Intensity>
     auto collectImage(Intensity intensity)
     {
@@ -27,6 +32,7 @@ public:
 
 private:
     SensorSize size;
+    SensorOffset offset;
     Float pixelSize;
     Distribution distribution;
 
@@ -38,8 +44,8 @@ private:
     Point pointAt(unsigned x, unsigned y) const
     {
         return {
-            (x - 0.5 * (size.width - 1)) * pixelSize,
-            (y - 0.5 * (size.height - 1)) * pixelSize,
+            (x - 0.5 * (size.width - 1)) * pixelSize + offset.x,
+            (y - 0.5 * (size.height - 1)) * pixelSize + offset.y,
             0};
     }
     template <typename F2>
@@ -52,9 +58,9 @@ private:
 };
 
 template <typename Distribution>
-CameraSensor<Distribution> createCameraSensor(SensorSize size, Float pixelSize, Distribution distribution)
+CameraSensor<Distribution> createCameraSensor(SensorSize size, SensorOffset offset, Float pixelSize, Distribution distribution)
 {
-    return {size, pixelSize, std::move(distribution)};
+    return {size, offset, pixelSize, std::move(distribution)};
 }
 
 
