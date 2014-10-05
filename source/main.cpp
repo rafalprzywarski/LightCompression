@@ -43,17 +43,17 @@ int main()
         //{{{ 30, 0, 260}, 15}},
     };
     using Material = lc::scene::BrdfMaterial<lc::scene::UniformDirections, lc::scene::StretchedPhongBrdf>;
-    Material material{{}, {100}};
+    lc::scene::UniformDirections uniform;
     lc::scene::Spheres<Material> spheres = {
-        {{{-10, 0, 180}, 5}, Material{{}, {40}}},
-        {{{0, 10, 220}, 5}, Material{{}, {20}}},
-        {{{-10, 10, 240}, 5}, Material{{}, {20}}},
-        {{{-20, 10, 260}, 5}, Material{{}, {20}}},
-        {{{40, 0, 200}, 40}, Material{{}, {4}}}};
+        {{{-10, 0, 180}, 5}, Material{uniform, {40}}},
+        {{{0, 10, 220}, 5}, Material{uniform, {20}}},
+        {{{-10, 10, 240}, 5}, Material{uniform, {20}}},
+        {{{-20, 10, 260}, 5}, Material{uniform, {20}}},
+        {{{40, 0, 200}, 40}, Material{uniform, {4}}}};
     auto scene = createScene(spheres, lights);
     serialize_to_xml(scene, "scene", "scene.xml");
 
-    lc::FixedDistribution distribution = circle(5, 16, 8);
+    lc::FixedDistribution distribution = circle(0.05, 2, 128);
     auto sensor = lc::createCameraSensor({1024, 512}, 0.000625, distribution);
     lc::geom::ThinLens lens{2, 1.9775};
     auto camera = lc::createCamera(sensor, lens);

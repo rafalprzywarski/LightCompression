@@ -42,7 +42,7 @@ private:
 
 struct MirrorDistribution
 {
-    Vector getDirection(Vector incoming, Vector normal) const
+    Vector genDirection(Vector incoming, Vector normal)
     {
         return geom::reflect(normal, incoming);
     }
@@ -52,11 +52,11 @@ template <typename DirectionDistribution, typename Brdf>
 class BrdfMaterial
 {
 public:
-    BrdfMaterial(DirectionDistribution directions, Brdf brdf)
-        : directions(std::move(directions)), brdf(std::move(brdf)) { }
+    BrdfMaterial(DirectionDistribution& directions, Brdf brdf)
+        : directions(&directions), brdf(std::move(brdf)) { }
     LightRay getReflectionRay(Vector incoming, geom::Ray normal) const
     {
-        auto outgoing = directions.getDirection(incoming, normal.getDirection());
+        auto outgoing = directions->genDirection(incoming, normal.getDirection());
         return {{normal.getOrigin(), outgoing}, brdf.getTransfer(incoming, normal.getDirection(), outgoing)};
     }
 
@@ -67,19 +67,19 @@ public:
         a & boost::serialization::make_nvp("brdf", brdf);
     }
 private:
-    DirectionDistribution directions;
+    DirectionDistribution *directions;
     Brdf brdf;
 };
 
 struct MirrorMaterial : BrdfMaterial<MirrorDistribution, ConstantBrdf>
 {
-    MirrorMaterial(Float reflectivity = 1) : BrdfMaterial({}, {reflectivity}) { }
+    MirrorMaterial(MirrorDistribution& distribution, Float reflectivity = 1) : BrdfMaterial(distribution, {reflectivity}) { }
 };
 
 struct UniformDirections
 {
 public:
-    Vector getDirection(Vector, Vector normal) const
+    Vector genDirection(Vector, Vector normal)
     {
         Vector d = uos(rng);
         return dot(d, normal) < 0 ? -d : d;
@@ -100,8 +100,8 @@ private:
         using iterator = Float *;
     };
 
-    mutable boost::random::uniform_on_sphere<Float, VectorWrapper> uos{3};
-    mutable boost::random::mt19937 rng;
+    boost::random::uniform_on_sphere<Float, VectorWrapper> uos{3};
+    boost::random::mt19937 rng;
 };
 
 }

@@ -18,7 +18,8 @@ struct RaytraceTest : testing::Test
 {
     using Spheres = Spheres<MirrorMaterial>;
     DirectRayOnly directRayOnly;
-    MirrorMaterial mirror;
+    MirrorDistribution mirrorDistribution;
+    MirrorMaterial mirror{mirrorDistribution};
     geom::NoLens noLens;
 
     template <typename Spheres>
@@ -40,6 +41,11 @@ struct RaytraceTest : testing::Test
         for (unsigned i = 0; i < N; ++i)
             samples.push_back(view(img)(i, 0));
         return samples;
+    }
+
+    MirrorMaterial mirrorMaterial(Float reflectivity)
+    {
+        return {mirrorDistribution, reflectivity};
     }
 };
 
@@ -92,7 +98,8 @@ TEST_F(RaytraceTest, should_trace_brdf_materials)
     auto camera = createCamera(sensor, noLens);
     Light light{{{0, 0, -40}, 20}, 255};
     using Material = BrdfMaterial<UniformDirections, ConstantBrdf>;
-    Material material{{}, {1}};
+    UniformDirections uniform;
+    Material material{uniform, {1}};
     scene::Spheres<Material> spheres{{{{0, 0, 20}, 10}, material}};
     auto img = createScene(spheres, {light}).raytraceImage(camera);
     auto v = view(img);
@@ -182,7 +189,7 @@ TEST_F(RaytraceTest, should_saturate_light_intensity)
 TEST_F(RaytraceTest, materials_should_decrease_the_amount_of_reflected_light)
 {
     Light light{{{5, 0, 3}, 1}, 8};
-    Spheres spheres{{{{-1, 0, 4}, std::sqrt(Float(2))}, MirrorMaterial{0.625}}};
+    Spheres spheres{{{{-1, 0, 4}, std::sqrt(Float(2))}, mirrorMaterial(0.625)}};
     EXPECT_EQ(8 * 0.625, traceCentralRay(spheres, light));
 }
 
@@ -190,8 +197,8 @@ TEST_F(RaytraceTest, each_bounce_should_decrease_the_amount_of_reflected_light)
 {
     Light light{{{3, 0, 8}, 1}, 16};
     Spheres spheres{
-        {{{-1, 0, 4}, std::sqrt(Float(2))}, MirrorMaterial{0.75}},
-        {{{4, 0, 2}, std::sqrt(Float(2))}, MirrorMaterial{0.5}}};
+        {{{-1, 0, 4}, std::sqrt(Float(2))}, mirrorMaterial(0.75)},
+        {{{4, 0, 2}, std::sqrt(Float(2))}, mirrorMaterial(0.5)}};
     EXPECT_EQ(16 * 0.75 * 0.5, traceCentralRay(spheres, light));
 }
 
@@ -199,7 +206,7 @@ TEST_F(RaytraceTest, should_use_stretched_phong_model)
 {
     Light light{{{0, 0, -105}, 100}, 2};
     using Spheres = scene::Spheres<BrdfMaterial<MirrorDistribution, StretchedPhongBrdf>>;
-    Spheres spheres{{{{0, 0, 5}, 4}, {{}, {100}}}};
+    Spheres spheres{{{{0, 0, 5}, 4}, {mirrorDistribution, {100}}}};
     ASSERT_THAT(traceHorizontalRays(3, spheres, light), ElementsAre(67, 64, 67));
 }
 
