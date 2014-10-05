@@ -25,6 +25,15 @@ public:
         return image;
     }
 
+    template <typename Archive>
+    void serialize(Archive& a, unsigned)
+    {
+        a & boost::serialization::make_nvp("width", size.width);
+        a & boost::serialization::make_nvp("height", size.height);
+        a & boost::serialization::make_nvp("pixelSize", pixelSize);
+        a & boost::serialization::make_nvp("distribution", distribution);
+    }
+
 private:
     SensorSize size;
     Float pixelSize;

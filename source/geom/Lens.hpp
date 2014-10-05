@@ -17,6 +17,14 @@ public:
         Point originAtLens = getLensIntersection(r);
         return Ray{originAtLens, getFocalPoint(r.getDirection()) - originAtLens};
     }
+
+    template <typename Archive>
+    void serialize(Archive& a, unsigned)
+    {
+        a & boost::serialization::make_nvp("zDistance", zDistance);
+        a & boost::serialization::make_nvp("focalLength", focalLength);
+    }
+
 private:
     Float zDistance;
     Float focalLength;

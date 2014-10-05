@@ -30,6 +30,12 @@ public:
         auto LV = -dot(incoming, outgoing);
         return cn * std::pow(std::max((2 * NL * NV - LV), Float(0)), n) / std::max(NL, NV);
     }
+
+    template <typename Archive>
+    void serialize(Archive& a, unsigned)
+    {
+        a & boost::serialization::make_nvp("n", n);
+    }
 private:
     Float n;
 };
@@ -53,6 +59,13 @@ public:
         auto outgoing = directions.getDirection(incoming, normal.getDirection());
         return {{normal.getOrigin(), outgoing}, brdf.getTransfer(incoming, normal.getDirection(), outgoing)};
     }
+
+    template <typename Archive>
+    void serialize(Archive& a, unsigned)
+    {
+        a & boost::serialization::make_nvp("directions", directions);
+        a & boost::serialization::make_nvp("brdf", brdf);
+    }
 private:
     DirectionDistribution directions;
     Brdf brdf;
@@ -71,6 +84,12 @@ public:
         Vector d = uos(rng);
         return dot(d, normal) < 0 ? -d : d;
     }
+
+    template <typename Archive>
+    void serialize(Archive& , unsigned)
+    {
+    }
+
 private:
 
     struct VectorWrapper : Vector

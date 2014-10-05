@@ -19,6 +19,13 @@ public:
             return {};
         return material.getReflectionRay(ray.getDirection(), *normal).getTransfered(ray.getIntensity());
     }
+
+    template <typename Archive>
+    void serialize(Archive& a, unsigned)
+    {
+        a & boost::serialization::make_nvp("geom", sphere);
+        a & boost::serialization::make_nvp("material", material);
+    }
 private:
     geom::Sphere sphere;
     Material material;

@@ -15,6 +15,14 @@ public:
     {
         return sensor.collectImage([=](auto ray) { return intensity(lens.refract(ray)); });
     }
+
+    template <typename Archive>
+    void serialize(Archive& a, unsigned)
+    {
+        a & boost::serialization::make_nvp("sensor", sensor);
+        a & boost::serialization::make_nvp("lens", lens);
+    }
+
 private:
     CameraSensor sensor;
     Lens lens;

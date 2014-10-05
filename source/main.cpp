@@ -6,6 +6,8 @@
 #include "Distribution.hpp"
 #include "scene/Material.hpp"
 #include "WritePng.hpp"
+#include <boost/archive/xml_oarchive.hpp>
+#include <fstream>
 
 lc::FixedDistribution circle(lc::Float radius, unsigned N, unsigned S)
 {
@@ -21,6 +23,14 @@ lc::FixedDistribution circle(lc::Float radius, unsigned N, unsigned S)
                 dirs.push_back(p);
         }
     return dirs;
+}
+
+template <typename T>
+void serialize_to_xml(const T& val, const char *name, const std::string& filename)
+{
+    std::ofstream of{filename};
+    boost::archive::xml_oarchive xml(of);
+    xml << boost::serialization::make_nvp(name, val);
 }
 
 int main()
@@ -41,10 +51,13 @@ int main()
         {{{-20, 10, 260}, 5}, Material{{}, {20}}},
         {{{40, 0, 200}, 40}, Material{{}, {4}}}};
     auto scene = createScene(spheres, lights);
-    lc::FixedDistribution distribution = circle(0.05, 2, 8192 * 4);
+    serialize_to_xml(scene, "scene", "scene.xml");
+
+    lc::FixedDistribution distribution = circle(5, 16, 8);
     auto sensor = lc::createCameraSensor({1024, 512}, 0.000625, distribution);
     lc::geom::ThinLens lens{2, 1.9775};
     auto camera = lc::createCamera(sensor, lens);
+    serialize_to_xml(camera, "camera", "camera.xml");
 
     auto image = scene.raytraceImage(camera);
     lc::writePng(image, "scene.png");

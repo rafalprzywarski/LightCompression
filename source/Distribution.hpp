@@ -43,6 +43,13 @@ public:
             s += intensity(geom::Ray{origin, d});
         return s / directions.size();
     }
+
+    template <typename Archive>
+    void serialize(Archive& a, unsigned)
+    {
+        a & boost::serialization::make_nvp("directions", directions);
+    }
+
 private:
     std::vector<Vector> directions;
 };
