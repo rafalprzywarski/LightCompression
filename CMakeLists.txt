@@ -1,11 +1,11 @@
 project(cellcpp)
 cmake_minimum_required(VERSION 2.8)
 
-add_definitions("-std=c++1y -Wall -O3")
+add_definitions("-std=c++1y -Wall")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
-find_package(Boost COMPONENTS serialization REQUIRED)
+find_package(Boost COMPONENTS system filesystem REQUIRED)
 find_package(Png REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS} "libraries/cml-1_0_2")
 

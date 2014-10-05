@@ -3,7 +3,6 @@
 #include "Ray.hpp"
 #include "Geom.hpp"
 #include <vector>
-#include <boost/serialization/vector.hpp>
 
 namespace lc
 {
@@ -29,13 +28,6 @@ public:
         auto intersectionPoint = ray.getOrigin() + *distance * ray.getDirection();
         auto normal = normalize(intersectionPoint - origin);
         return Ray{intersectionPoint, normal};
-    }
-
-    template <typename Archive>
-    void serialize(Archive& a, unsigned)
-    {
-        a & boost::serialization::make_nvp("origin", origin);
-        a & boost::serialization::make_nvp("radius2", radius2);
     }
 
 private:

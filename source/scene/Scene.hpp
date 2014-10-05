@@ -1,6 +1,5 @@
 #pragma once
 #include "Light.hpp"
-#include <boost/serialization/vector.hpp>
 
 namespace lc
 {
@@ -19,14 +18,6 @@ public:
     {
         return camera.collectImage([&](auto ray) { return raytraceIntensity(ray); });
     }
-
-    template <typename Archive>
-    void serialize(Archive& a, unsigned)
-    {
-        a & boost::serialization::make_nvp("spheres", spheres);
-        a & boost::serialization::make_nvp("lights", lights);
-    }
-
 private:
     Spheres spheres;
     Lights lights;
