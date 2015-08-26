@@ -16,19 +16,33 @@ namespace scene
 
 struct RaytraceTest : testing::Test
 {
+    template <typename Material>
+    struct Sphere1 : Sphere<Material> { using Sphere<Material>::Sphere; };
+    template <typename Material>
+    struct Sphere2 : Sphere<Material> { using Sphere<Material>::Sphere; };
+
     using Spheres = Spheres<MirrorMaterial>;
+    using Spheres1 = std::vector<Sphere1<MirrorMaterial>>;
+    using Spheres2 = std::vector<Sphere2<MirrorMaterial>>;
+
     DirectRayOnly directRayOnly;
     MirrorDistribution mirrorDistribution;
     MirrorMaterial mirror{mirrorDistribution};
     geom::NoLens noLens;
 
-    template <typename Spheres>
-    Float traceCentralRay(Spheres spheres, Light light)
+    template <typename... Objects>
+    Float traceCentralRay(Lights lights, Objects... objects)
     {
         auto sensor = createCameraSensor({1, 1}, {0, 0}, 1, directRayOnly);
         auto camera = createCamera(sensor, noLens);
-        auto img = createScene(spheres, {light}).raytraceImage(camera);
+        auto img = createScene(lights, objects...).raytraceImage(camera);
         return view(img)(0, 0);
+    }
+
+    template <typename Objects>
+    Float traceCentralRay(Objects objects, Light light)
+    {
+        return traceCentralRay({light}, objects);
     }
 
     template <typename Spheres>
@@ -36,7 +50,7 @@ struct RaytraceTest : testing::Test
     {
         auto sensor = createCameraSensor({N, 1}, {0, 0}, 1, directRayOnly);
         auto camera = createCamera(sensor, noLens);
-        auto img = createScene(spheres, {light}).raytraceImage(camera);
+        auto img = createScene({light}, spheres).raytraceImage(camera);
         std::vector<Float> samples;
         for (unsigned i = 0; i < N; ++i)
             samples.push_back(view(img)(i, 0));
@@ -54,7 +68,7 @@ TEST_F(RaytraceTest, should_trace_all_lights)
     auto sensor = createCameraSensor({16, 8}, {0, 0}, 1, directRayOnly);
     auto camera = createCamera(sensor, noLens);
     Lights lights{{{{0, 0, 100}, 3}, 255}, {{{6, 3, 200}, 4}, 255}};
-    auto img = createScene(Spheres{}, lights).raytraceImage(camera);
+    auto img = createScene(lights, Spheres{}).raytraceImage(camera);
     auto v = view(img);
     EXPECT_EQ(0u, v(0, 0)) << "background";
     EXPECT_EQ(0u, v(8, 0)) << "background";
@@ -71,7 +85,7 @@ TEST_F(RaytraceTest, should_trace_using_lens)
     geom::ThinLens lens{0, FOCAL_LENGTH};
     auto camera = createCamera(sensor, lens);
     Lights lights{{{{0, 0, FOCAL_LENGTH + 5}, 3}, 255}};
-    auto img = createScene(Spheres{}, lights).raytraceImage(camera);
+    auto img = createScene(lights, Spheres{}).raytraceImage(camera);
     auto v = view(img);
     EXPECT_EQ(255u, v(4, 4));
     EXPECT_EQ(255u, v(4, 5));
@@ -85,7 +99,7 @@ TEST_F(RaytraceTest, should_trace_reflective_spheres)
     auto camera = createCamera(sensor, noLens);
     Light light{{{5, 0, 3}, 1}, 255};
     Sphere<MirrorMaterial> sphere{{{-1, 0, 4}, std::sqrt(Float(2))}, mirror};
-    auto img = createScene(Spheres{sphere}, {light}).raytraceImage(camera);
+    auto img = createScene({light}, Spheres{sphere}).raytraceImage(camera);
     auto v = view(img);
     EXPECT_EQ(0u, v(2, 0)) << "sphere missed";
     EXPECT_EQ(255u, v(1, 0)) << "reflected light";
@@ -101,7 +115,7 @@ TEST_F(RaytraceTest, should_trace_brdf_materials)
     UniformDirections uniform;
     Material material{uniform, {1}};
     scene::Spheres<Material> spheres{{{{0, 0, 20}, 10}, material}};
-    auto img = createScene(spheres, {light}).raytraceImage(camera);
+    auto img = createScene({light}, spheres).raytraceImage(camera);
     auto v = view(img);
     EXPECT_LT(v(0, 0), 30u) << "diffuse light";
     EXPECT_GT(v(0, 0), 20u) << "diffuse light";
@@ -208,6 +222,18 @@ TEST_F(RaytraceTest, should_use_stretched_phong_model)
     using Spheres = scene::Spheres<BrdfMaterial<MirrorDistribution, StretchedPhongBrdf>>;
     Spheres spheres{{{{0, 0, 5}, 4}, {mirrorDistribution, {100}}}};
     ASSERT_THAT(traceHorizontalRays(3, spheres, light), ElementsAre(67, 64, 67));
+}
+
+TEST_F(RaytraceTest, should_trace_objects_of_different_types)
+{
+    Lights lights{{{{0, 0, 10}, 1}, 255}, {{{8, 0, 3}, 1}, 255}};
+    Spheres spheres{{{{-1, 0, 4}, std::sqrt(Float(2))}, mirror}};
+    Spheres1 spheres1{{{{3, 0, 3}, 1}, mirror}};
+    Spheres2 spheres2{{{{5, 0, 3}, 1}, mirror}};
+
+    EXPECT_EQ(0u, traceCentralRay(lights, spheres, spheres1, spheres2));
+    EXPECT_EQ(0u, traceCentralRay(lights, spheres1, spheres2, spheres));
+    EXPECT_EQ(0u, traceCentralRay(lights, spheres2, spheres, spheres1));
 }
 
 }

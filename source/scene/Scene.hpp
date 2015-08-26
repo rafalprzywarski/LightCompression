@@ -6,12 +6,12 @@ namespace lc
 namespace scene
 {
 
-template <typename Objects>
+template <typename... Objects>
 class Scene
 {
 public:
-    Scene(Objects objects, Lights lights)
-        : objects(std::move(objects)), lights(std::move(lights)) { }
+    Scene(Lights lights, Objects... objects)
+        : objects(std::move(objects)...), lights(std::move(lights)) { }
 
     template <typename Camera>
     auto raytraceImage(Camera camera)
@@ -19,18 +19,31 @@ public:
         return camera.collectImage([&](auto ray) { return raytraceIntensity(ray); });
     }
 private:
-    Objects objects;
+    std::tuple<Objects...> objects;
     Lights lights;
+
+    template <std::size_t I = 0, typename F, typename... T>
+    typename std::enable_if<I == sizeof...(T), void>::type forEach(std::tuple<T...> &, F) { }
+
+    template<std::size_t I = 0, typename F, typename... T>
+    typename std::enable_if<I < sizeof...(T), void>::type forEach(std::tuple<T...>& t, F f)
+    {
+        f(std::get<I>(t));
+        forEach<I + 1, F, T...>(t, f);
+    }
 
     Opt<LightRay> getReflectedRay(LightRay ray)
     {
         Opt<LightRay> reflected;
-        for (auto& o : objects)
-            if (auto r = o.reflect(ray))
-                if (!reflected ||
-                    (ray.getOrigin() - reflected->getOrigin()).length_squared() >
-                    (ray.getOrigin() - r->getOrigin()).length_squared())
-                    reflected = *r;
+        forEach(objects, [&reflected, &ray](auto objects)
+        {
+            for (auto& o : objects)
+                if (auto r = o.reflect(ray))
+                    if (!reflected ||
+                        (ray.getOrigin() - reflected->getOrigin()).length_squared() >
+                        (ray.getOrigin() - r->getOrigin()).length_squared())
+                        reflected = *r;
+        });
         return reflected;
     }
 
@@ -70,12 +83,11 @@ private:
     }
 };
 
-template <typename Objects>
-Scene<Objects> createScene(Objects objects, Lights lights)
+template <typename... Objects>
+Scene<Objects...> createScene(Lights lights, Objects... objects)
 {
-    return {std::move(objects), std::move(lights)};
+    return {std::move(lights), std::move(objects)...};
 }
-
 
 }
 }

@@ -40,7 +40,7 @@ auto createScene()
         {{{-10, 10, 240}, 5}, Material{uniform, {20}}},
         {{{-20, 10, 260}, 5}, Material{uniform, {20}}},
         {{{40, 0, 200}, 40}, Material{uniform, {4}}}};
-    return createScene(spheres, lights);
+    return createScene(lights, spheres);
 }
 
 auto createCamera()
