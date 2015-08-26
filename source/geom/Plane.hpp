@@ -27,6 +27,11 @@ public:
         return distance;
     }
 
+    bool isBehind(Point p) const
+    {
+        return dot(p, normal) < d;
+    }
+
 private:
     Vector normal;
     Float d;

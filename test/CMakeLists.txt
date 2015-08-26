@@ -11,6 +11,7 @@ add_executable(lightcompressiontest
     geom/LensTest.cpp
     geom/TwoElementCameraLensTest.cpp
     geom/PlaneTest.cpp
+    geom/PolyhedronTest.cpp
 )
 
 target_link_libraries(lightcompressiontest ${Boost_LIBRARIES} gmock pthread)
