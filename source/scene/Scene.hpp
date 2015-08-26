@@ -6,12 +6,12 @@ namespace lc
 namespace scene
 {
 
-template <typename Spheres>
+template <typename Objects>
 class Scene
 {
 public:
-    Scene(Spheres spheres, Lights lights)
-        : spheres(std::move(spheres)), lights(std::move(lights)) { }
+    Scene(Objects objects, Lights lights)
+        : objects(std::move(objects)), lights(std::move(lights)) { }
 
     template <typename Camera>
     auto raytraceImage(Camera camera)
@@ -19,14 +19,14 @@ public:
         return camera.collectImage([&](auto ray) { return raytraceIntensity(ray); });
     }
 private:
-    Spheres spheres;
+    Objects objects;
     Lights lights;
 
     Opt<LightRay> getReflectedRay(LightRay ray)
     {
         Opt<LightRay> reflected;
-        for (auto& s : spheres)
-            if (auto r = s.reflect(ray))
+        for (auto& o : objects)
+            if (auto r = o.reflect(ray))
                 if (!reflected ||
                     (ray.getOrigin() - reflected->getOrigin()).length_squared() >
                     (ray.getOrigin() - r->getOrigin()).length_squared())
@@ -70,10 +70,10 @@ private:
     }
 };
 
-template <typename Spheres>
-Scene<Spheres> createScene(Spheres spheres, Lights lights)
+template <typename Objects>
+Scene<Objects> createScene(Objects objects, Lights lights)
 {
-    return {std::move(spheres), std::move(lights)};
+    return {std::move(objects), std::move(lights)};
 }
 
 
