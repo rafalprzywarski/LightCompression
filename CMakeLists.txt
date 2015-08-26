@@ -1,7 +1,7 @@
 project(cellcpp)
 cmake_minimum_required(VERSION 2.8)
 
-add_definitions("-std=c++1y -Wall")
+add_definitions("-std=c++1y")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 

@@ -1,3 +1,4 @@
+add_definitions("-Wall")
 add_definitions(-Dint_p_NULL=nullptr)
 
 add_executable(raytrace main.cpp)
