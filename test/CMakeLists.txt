@@ -10,6 +10,7 @@ add_executable(lightcompressiontest
     CameraSensorTest.cpp
     geom/LensTest.cpp
     geom/TwoElementCameraLensTest.cpp
+    geom/PlaneTest.cpp
 )
 
 target_link_libraries(lightcompressiontest ${Boost_LIBRARIES} gmock pthread)
