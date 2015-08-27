@@ -6,23 +6,26 @@ namespace lc
 namespace scene
 {
 
-template <typename Material>
-class Sphere
+template <typename Shape, typename Material>
+class Object
 {
 public:
-    Sphere(geom::Sphere sphere, Material material)
-        : sphere(sphere), material(material) { }
+    Object(Shape shape, Material material)
+        : shape(shape), material(material) { }
     Opt<LightRay> reflect(LightRay ray) const
     {
-        auto normal = sphere.getSurfaceNormalRay(ray);
+        auto normal = shape.getSurfaceNormalRay(ray);
         if (!normal)
             return {};
         return material.getReflectionRay(ray.getDirection(), *normal).getTransfered(ray.getIntensity());
     }
 private:
-    geom::Sphere sphere;
+    Shape shape;
     Material material;
 };
+
+template <typename Material>
+using Sphere = Object<geom::Sphere, Material>;
 
 template <typename Material>
 using Spheres = std::vector<Sphere<Material>>;

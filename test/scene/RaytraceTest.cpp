@@ -1,6 +1,6 @@
 #include <gmock/gmock.h>
 #include <scene/Scene.hpp>
-#include <scene/Sphere.hpp>
+#include <scene/Object.hpp>
 #include <scene/Material.hpp>
 #include <Camera.hpp>
 #include <geom/Lens.hpp>

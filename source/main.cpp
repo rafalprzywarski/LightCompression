@@ -1,6 +1,6 @@
 #include <vector>
 #include "scene/Scene.hpp"
-#include "scene/Sphere.hpp"
+#include "scene/Object.hpp"
 #include "Camera.hpp"
 #include "geom/Lens.hpp"
 #include "Distribution.hpp"
