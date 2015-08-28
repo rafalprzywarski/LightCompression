@@ -44,8 +44,8 @@ private:
     Point pointAt(unsigned x, unsigned y) const
     {
         return {
-            (x - 0.5 * (size.width - 1)) * pixelSize + offset.x,
-            (y - 0.5 * (size.height - 1)) * pixelSize + offset.y,
+            (x - Float(0.5) * (size.width - 1)) * pixelSize + offset.x,
+            (y - Float(0.5) * (size.height - 1)) * pixelSize + offset.y,
             0};
     }
     template <typename F2>

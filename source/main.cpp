@@ -13,7 +13,7 @@ lc::FixedDistribution circle(lc::Float radius, unsigned N, unsigned S)
     for (unsigned y = 0; y < N; ++y)
         for (unsigned x = 0; x < N; ++x)
         {
-            lc::Point p{(lc::Float(x) / N - 0.5) * radius * 2, (lc::Float(y) / N - 0.5) * radius * 2, 0};
+            lc::Point p{(lc::Float(x) / N - lc::Float(0.5)) * radius * 2, (lc::Float(y) / N - lc::Float(0.5)) * radius * 2, 0};
             if (p.length() > radius)
                 continue;
             p[2] = 1;
