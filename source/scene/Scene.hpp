@@ -23,10 +23,10 @@ private:
     Lights lights;
 
     template <std::size_t I = 0, typename F, typename... T>
-    typename std::enable_if<I == sizeof...(T), void>::type forEach(std::tuple<T...> &, F) { }
+    typename std::enable_if<I == sizeof...(T), void>::type forEach(const std::tuple<T...>&, F) { }
 
     template<std::size_t I = 0, typename F, typename... T>
-    typename std::enable_if<I < sizeof...(T), void>::type forEach(std::tuple<T...>& t, F f)
+    typename std::enable_if<I < sizeof...(T), void>::type forEach(const std::tuple<T...>& t, F f)
     {
         f(std::get<I>(t));
         forEach<I + 1, F, T...>(t, f);
@@ -35,7 +35,7 @@ private:
     Opt<LightRay> getReflectedRay(LightRay ray)
     {
         Opt<LightRay> reflected;
-        forEach(objects, [&reflected, &ray](auto objects)
+        forEach(objects, [&reflected, &ray](auto const& objects)
         {
             for (auto& o : objects)
                 if (auto r = o.reflect(ray))
